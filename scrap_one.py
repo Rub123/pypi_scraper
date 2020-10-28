@@ -19,6 +19,7 @@ pypi_url = "https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A
 
 
 def parse_released(tag_: bs4.element.Tag):
+    # todo - add docstring
     # the datetime data from pypi is not consistent in its format.
     # instead of leaving it as strings, this code will parse a date object (discarded the time info.)
     released = tag_.contents[0].get('datetime')[:10]
@@ -32,12 +33,14 @@ soup = BeautifulSoup(html.content, 'html.parser')
 
 
 def get_soup(url: str) -> BeautifulSoup:
+    # todo - add docstring
     response: requests.Response = requests.get(url)
     # TODO add response error handling
     return BeautifulSoup(response.content, 'html.parser')
 
 
 def get_next_page(page: BeautifulSoup):
+    # todo - add docstring
     button_group = page.find_all('a', class_='button button-group__button')
     for button in reversed(button_group):
         if button.text == 'Next':
@@ -45,6 +48,7 @@ def get_next_page(page: BeautifulSoup):
 
 
 def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
+    # todo - add docstring
     packages = page.find_all('a', class_='package-snippet')
     packages_links = [PackageSnippet(
                        package.find('span', class_='package-snippet__name').text,
@@ -58,6 +62,7 @@ def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
 
 
 def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup = soup) -> PackageSnippetList:
+    # todo - add docstring
     packages_snippets = []
     page = start_page
     for _ in range(n_pages):
