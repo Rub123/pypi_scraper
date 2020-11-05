@@ -120,10 +120,10 @@ sidebar_section_getters = {
 
 
 def scrap_side_bars(pack_soup: BeautifulSoup, pack_snippet: PackageSnippet):
-    data = {PackageSnippet: {}}
+    data = {pack_snippet: {}}
     for div in pack_soup.find_all('div', class_='sidebar-section'):
         sidebar_title = div.find('h3', class_='sidebar-section__title').text
         if sidebar_title in SKIP_SECTIONS:
             continue
-        data[PackageSnippet].update(sidebar_section_getters[sidebar_title](div))
+        data[pack_snippet].update(sidebar_section_getters[sidebar_title](div))
     return data
