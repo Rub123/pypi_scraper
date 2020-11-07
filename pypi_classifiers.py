@@ -9,7 +9,6 @@ CLASSIFIER_INDEX = 1
 def get_soup(url: str) -> BeautifulSoup:
     # todo add docstrings
     response: requests.Response = requests.get(url)
-    # TODO add response error handling
     return BeautifulSoup(response.content, 'html.parser')
 
 
