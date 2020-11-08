@@ -3,24 +3,24 @@ from scrap_package_snippet import PackageSnippet, get_soup, get_n_pages_of_packa
 from scrap_package_snippet import START_PAGE
 
 SNIPPET_PAGES = 50  # 20 packages per page so 50 pages is for scraping a 1000 packages.
-PACKAGE_SEPARATORS_CHARS = 100
+PACKAGE_SEPARATORS_CHARS = 100  # used to decide the length of a line that separates each package when printing
 
 
 def append_to_file(text: str, file: str) -> None:
-    """ #todo docstring
-
-    :param text:
-    :param file:
+    """
+    Add information to an existing file
+    :param text: text to append to file
+    :param file: path to file
     """
     with open(file, 'a', encoding='utf-8') as f:
         f.write(text)
 
 
-def print_data(n_pages: int = SNIPPET_PAGES, save_file=None):
-    """#todo docstring
+def print_data(n_pages: int = SNIPPET_PAGES, save_file=None) -> None:
+    """ Prints the scraped data to the screen. If save_file will also save the information to a file
 
-    :param n_pages:
-    :param save_file:
+    :param n_pages: unt, number of pages
+    :param save_file: Define this parameter to save information to that file path # todo check if file path exists
     """
     packs_snips = get_n_pages_of_packages_snippets(n_pages, get_soup(START_PAGE))
     packs_soups = (get_soup(get_package_details_url(pack)) for pack in packs_snips)
@@ -46,4 +46,4 @@ def print_data(n_pages: int = SNIPPET_PAGES, save_file=None):
 
 
 if __name__ == '__main__':
-    print_data(SNIPPET_PAGES, 'pypi_packages.txt')
+    print_data(SNIPPET_PAGES, 'pypi_packages.txt') # todo shouldn't pypi_packages be a constant? this looks lik

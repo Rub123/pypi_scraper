@@ -6,7 +6,7 @@ from typing import List
 
 HOME_PAGE = "https://pypi.org"
 START_PAGE = pypi_url = "https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A+Python+%3A%3A+3"
-NUMBER_OF_SEP_CHARS = 100  # When printing the info for a package - will use a separator  char between each pack.
+NUMBER_OF_SEP_CHARS = 100  # When printing the info for a package - will use a separator char between each pack.
 
 # A named tuple class to hold the package snippet info.
 PackageSnippet = namedtuple('PackageSnippet',
@@ -17,13 +17,17 @@ PackageSnippetList = List[PackageSnippet]
 
 
 def get_soup(url: str) -> BeautifulSoup:
-    """Todo add docstring"""
+    """
+    Takes a url and return the BeautifulSoup object of that url
+    """
     response: requests.Response = requests.get(url)
     return BeautifulSoup(response.content, 'html.parser')
 
 
 def parse_released(tag_: element.Tag) -> datetime.date:
-    """Todo add docstring"""
+    """
+    takes a datetime element and return only the date the form of %Y-%m-%d
+    """
     # the datetime data from pypi is not consistent in its format.
     # instead of leaving it as strings, this code will parse a date object (discarded the time info.)
     released = tag_.contents[0].get('datetime')[:10]
@@ -31,7 +35,9 @@ def parse_released(tag_: element.Tag) -> datetime.date:
 
 
 def get_next_page(page: BeautifulSoup) -> str:
-    """Todo add docstring"""
+    """
+    finds the Next button of a page and return the link to that button
+    """
     button_group = page.find_all('a', class_='button button-group__button')
     for button in reversed(button_group):
         if button.text == 'Next':
@@ -39,7 +45,17 @@ def get_next_page(page: BeautifulSoup) -> str:
 
 
 def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
-    """Todo add docstring"""
+    """
+    get all relevant information of each snippet in a certain BeautifulSoup object
+    The information:
+    package name
+    version
+    link to page of the package
+    release date
+    short description of the package
+    :params page: BeautifulSoup object of a page
+    :return: list of all the information in the snippets of the BeautifulSoup object
+    """
     packages = page.find_all('a', class_='package-snippet')
     packages_links = [PackageSnippet(
                        package.find('span', class_='package-snippet__name').text,
@@ -49,11 +65,15 @@ def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
                        package.find('p', class_='package-snippet__description').text)
 
                       for package in packages]
-    return packages_links
+    return packages_links  # todo why we call this packages_links
 
 
 def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup) -> PackageSnippetList:
-    """Todo add docstring"""
+    """
+    scarp snippet information page by page of n_pages from a specific BeautifulSoup obeject.
+    :params n_pages: int, number of pages to scarp
+    :return: list of BeautifulSoup objects
+    """
     packages_snippets = []
     page = start_page
     for _ in range(n_pages):
@@ -65,7 +85,9 @@ def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup) ->
 
 
 def get_package_details_url(package_snippet: PackageSnippet) -> str:
-    """Todo add docstring"""
+    """
+    returns the full link to the detailed package page of a PackageSnippet
+    """
     return HOME_PAGE + package_snippet.link
 
 

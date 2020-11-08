@@ -7,13 +7,21 @@ CLASSIFIER_INDEX = 1
 
 
 def get_soup(url: str) -> BeautifulSoup:
-    # todo add docstrings
+    """
+    get a BeautifulSoup object from a given url.
+    :param url: url as string to get in BeautifulSoup from
+    :return: BeautifulSoup object
+    """
     response: requests.Response = requests.get(url)
     return BeautifulSoup(response.content, 'html.parser')
 
 
 def get_all_classifiers(url=PAGE) -> dict:
-    # todo add docstrings
+    """
+    Create a dictionary with all optional classifiers that are available in pypi as defined in the classifiers PAGE
+    :param url: takes the parameter PAGE that holds the link to the classifier page of pypi
+    :return: a dictionary of all available classifiers
+    """
     soup = get_soup(url)
     div = soup.find('div', class_='narrow-container')
     ul = div.find('ul')

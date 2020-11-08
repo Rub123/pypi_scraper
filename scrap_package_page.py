@@ -7,10 +7,10 @@ from pypi_classifiers import PAGE as CLASSIFIERS_PAGE
 from pypi_classifiers import get_all_classifiers
 
 
-# sidebar sections
+# titles of information available in sidebar sections
 # ['Navigation', 'Project links', 'Statistics', 'Meta', 'Maintainers', 'Classifiers']
 
-SKIP_SECTIONS = 'Navigation', 'Project links'
+SKIP_SECTIONS = 'Navigation', 'Project links'  # sections we decided to skip and not scarp information
 
 
 def get_meta(sidebar_section_div: element.Tag) -> dict:
@@ -26,7 +26,7 @@ def get_meta(sidebar_section_div: element.Tag) -> dict:
         for strong_tag in p_tag.find_all('strong'):
             meta_section = strong_tag.text.rstrip(':')
             if meta_section == 'License':
-                continue  # The license will be scraped from the classifiers section.
+                continue  # The license is scraped from the classifiers section.
             elif meta_section == 'Author':
                 author = p_tag.find('a')
                 if author:
@@ -76,22 +76,26 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
 
 # helper functions for getting the classifiers from the package page.
 def get_classifiers_set() -> set:
-    """Returns a set of all available classifiers from the CLASSIFIERS_PAGE of pypi."""
+    """Returns a set of all available classifiers from the CLASSIFIERS_PAGE of pypi in pep8 format"""
     classifiers_dict = get_all_classifiers(CLASSIFIERS_PAGE)
     return {classifier.strip().lower().replace(' ', '_') for classifier in classifiers_dict.keys()}
 
 
 def make_classifier_key(key: str) -> str:
-    """Converts the classifier keys to a proper pep8 string keys"""
+    """Converts the classifier keys in a specific page to a proper pep8 string keys"""
     return key.strip().lower().replace(' ', '_')
 
 
 def get_classifiers(sidebar_section_div: element.Tag) -> dict:
-    """ # todo finish this docstring
-
-    :param sidebar_section_div:
-    :return: A dict with classifier as key and a list of classifier values.
     """
+    Get classifiers that are mentioned in a page
+    check that the information under that classifier is part of the classifiers that are defined in
+    the classifier page of pypi
+    and return dictionary with the relevant available information from the page
+    :param sidebar_section_div: gets the div of the sidebar in a current page
+    :return: A dict with classifier as key and a list of classifier as value.
+    """
+
     classifiers_set = get_classifiers_set()
     classifiers = defaultdict(list)
     for ul_tag in sidebar_section_div.find_all('ul', class_='sidebar-section__classifiers'):
@@ -108,6 +112,7 @@ def get_classifiers(sidebar_section_div: element.Tag) -> dict:
     return dict(classifiers)
 
 
+# define a dictionary that holds as key the title of the side bar info, and as value the function you need to scarp it
 sidebar_section_getters = {
     # 'Navigation': None,
     # 'Project links': None,
@@ -120,7 +125,16 @@ sidebar_section_getters = {
 
 
 def scrap_side_bars(pack_soup: BeautifulSoup, pack_snippet: PackageSnippet):
-    """# todo add docstring"""
+    """
+    Get the actual data from the side bar of the page (ignores Navigation and project links)
+    and return a dict with the information that is available for the package given package (not all pages has all
+    the optional information)
+    the function uses the dict sidebar_section_getters to know which function to call in order to scarp the info
+    of that specific section
+    :param pack_soup: BeautifulSoup object
+    :param pack_snippet: PackageSnippet, information scarped from the snippet element
+    :return: dict with the available information for a specific package
+    """
     data = {pack_snippet: {}}
     for div in pack_soup.find_all('div', class_='sidebar-section'):
         sidebar_title = div.find('h3', class_='sidebar-section__title').text
