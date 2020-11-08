@@ -89,9 +89,7 @@ def make_classifier_key(key: str) -> str:
 def get_classifiers(sidebar_section_div: element.Tag) -> dict:
     """
     Get classifiers that are mentioned in a page
-    check that the information under that classifier is part of the classifiers that are defined in
-    the classifier page of pypi
-    and return dictionary with the relevant available information from the page
+    and return dictionary with the relevant available information from the page.
     :param sidebar_section_div: gets the div of the sidebar in a current page
     :return: A dict with classifier as key and a list of classifier as value.
     """

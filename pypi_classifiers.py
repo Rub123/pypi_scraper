@@ -8,7 +8,7 @@ CLASSIFIER_INDEX = 1
 
 def get_soup(url: str) -> BeautifulSoup:
     """
-    get a BeautifulSoup object from a given url.
+    Get a BeautifulSoup object from a given url.
     :param url: url as string to get in BeautifulSoup from
     :return: BeautifulSoup object
     """
@@ -19,7 +19,7 @@ def get_soup(url: str) -> BeautifulSoup:
 def get_all_classifiers(url=PAGE) -> dict:
     """
     Create a dictionary with all optional classifiers that are available in pypi as defined in the classifiers PAGE
-    :param url: takes the parameter PAGE that holds the link to the classifier page of pypi
+    :param url: Link to the classifier page of pypi, defaults to PAGE.
     :return: a dictionary of all available classifiers
     """
     soup = get_soup(url)

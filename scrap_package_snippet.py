@@ -18,7 +18,7 @@ PackageSnippetList = List[PackageSnippet]
 
 def get_soup(url: str) -> BeautifulSoup:
     """
-    Takes a url and return the BeautifulSoup object of that url
+    Takes a url string and return the BeautifulSoup object of that url
     """
     response: requests.Response = requests.get(url)
     return BeautifulSoup(response.content, 'html.parser')
@@ -26,7 +26,7 @@ def get_soup(url: str) -> BeautifulSoup:
 
 def parse_released(tag_: element.Tag) -> datetime.date:
     """
-    takes a datetime element and return only the date the form of %Y-%m-%d
+    takes a  bs4.element.Tag with the time of the package release and return the date of release (datetime.date).
     """
     # the datetime data from pypi is not consistent in its format.
     # instead of leaving it as strings, this code will parse a date object (discarded the time info.)
@@ -36,7 +36,7 @@ def parse_released(tag_: element.Tag) -> datetime.date:
 
 def get_next_page(page: BeautifulSoup) -> str:
     """
-    finds the Next button of a page and return the link to that button
+    finds the 'Next' button of a page and return the link to the next page as a string.
     """
     button_group = page.find_all('a', class_='button button-group__button')
     for button in reversed(button_group):
@@ -54,10 +54,10 @@ def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
     release date
     short description of the package
     :params page: BeautifulSoup object of a page
-    :return: list of all the information in the snippets of the BeautifulSoup object
+    :return: List of all the information in the snippets of the BeautifulSoup object.
     """
     packages = page.find_all('a', class_='package-snippet')
-    packages_links = [PackageSnippet(
+    packages_snippets = [PackageSnippet(
                        package.find('span', class_='package-snippet__name').text,
                        package.find('span', class_='package-snippet__version').text,
                        package.get('href'),
@@ -65,14 +65,14 @@ def get_packages_snippets_from_page(page: BeautifulSoup) -> PackageSnippetList:
                        package.find('p', class_='package-snippet__description').text)
 
                       for package in packages]
-    return packages_links  # todo why we call this packages_links
+    return packages_snippets
 
 
 def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup) -> PackageSnippetList:
     """
-    scarp snippet information page by page of n_pages from a specific BeautifulSoup obeject.
+    scarp snippet information page by page of n_pages from a specific start_page-BeautifulSoup object.
     :params n_pages: int, number of pages to scarp
-    :return: list of BeautifulSoup objects
+    :return: list of PackageSnippets
     """
     packages_snippets = []
     page = start_page
