@@ -17148,3 +17148,317 @@ Package: pyasli, Version 0.2.7:
 	programming_language:['Python :: 3', 'Python :: 3.7', 'Python :: 3.8', 'Python :: 3.9']
 ----------------------------------------------------------------------------------------------------
 
+Package: tinyhtml, Version 1.0.0:
+
+    Short description: A tiny library to safely render compact HTML5 from Python expressions.
+    
+    More Info:
+	stars:0
+	forks:0
+	open_issues:0
+	author:[('Niklas Fiekas', 'mailto:niklas.fiekas@backscattering.de')]
+	maintainers:[('niklasf', '/user/niklasf/')]
+	development_status:['5 - Production/Stable']
+	intended_audience:['Developers']
+	license:['OSI Approved :: Apache Software License', 'OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3 :: Only', 'Python :: 3.7', 'Python :: 3.8', 'Python :: 3.9']
+	topic:['Internet :: WWW/HTTP', 'Software Development :: Libraries :: Python Modules', 'Text Processing :: Markup :: HTML']
+	typing:['Typed']
+----------------------------------------------------------------------------------------------------
+
+Package: sway-xkb-switcher, Version 0.2.5:
+
+    Short description: Keyboard layout switcher for sway windows
+    
+    More Info:
+	stars:1
+	forks:1
+	open_issues:1
+	author:None
+	maintainers:[('nmukhachev', '/user/nmukhachev/')]
+	license:['OSI Approved :: MIT License']
+	programming_language:['Python :: 3', 'Python :: 3.8', 'Python :: 3.9']
+----------------------------------------------------------------------------------------------------
+
+Package: cdk-ecr-image-scan-notify, Version 0.0.10:
+
+    Short description: cdk-ecr-image-scan-notify is an AWS CDK construct library that notify the slack channel of Amazon ECR image scan results
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:None
+	maintainers:[('hayao_k', '/user/hayao_k/')]
+	development_status:['4 - Beta']
+	intended_audience:['Developers']
+	license:['OSI Approved']
+	operating_system:['OS Independent']
+	programming_language:['JavaScript', 'Python :: 3 :: Only', 'Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8']
+	typing:['Typed']
+----------------------------------------------------------------------------------------------------
+
+Package: dtale, Version 1.21.1:
+
+    Short description: Web Client for Visualizing Pandas Objects
+    
+    More Info:
+	stars:1686
+	forks:116
+	open_issues:37
+	author:[('MAN Alpha Technology', 'mailto:ManAlphaTech@man.com')]
+	maintainers:[('ahldev', '/user/ahldev/'), ('aschonfeld', '/user/aschonfeld/')]
+	development_status:['4 - Beta']
+	intended_audience:['Science/Research']
+	license:['OSI Approved :: GNU Library or Lesser General Public License (LGPL)']
+	operating_system:['OS Independent']
+	programming_language:['Python', 'Python :: 2.7', 'Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8']
+	topic:['Scientific/Engineering']
+----------------------------------------------------------------------------------------------------
+
+Package: pipelinex, Version 0.3.4:
+
+    Short description: Tool to build production-ready pipelines for experimentation with Kedro and MLflow
+    
+    More Info:
+	stars:95
+	forks:8
+	open_issues:1
+	author:[('Yusuke Minami', 'mailto:me@minyus.github.com')]
+	maintainers:[('Minyus86', '/user/Minyus86/')]
+	development_status:['3 - Alpha']
+	natural_language:['English']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3.5', 'Python :: 3.6', 'Python :: 3.7']
+----------------------------------------------------------------------------------------------------
+
+Package: fastlmm, Version 0.4.12:
+
+    Short description: Fast GWAS
+    
+    More Info:
+	stars:13
+	forks:4
+	open_issues:5
+	author:[('FaST-LMM Team', 'mailto:fastlmm-dev@python.org')]
+	maintainers:[('bobd', '/user/bobd/'), ('carlk', '/user/carlk/'), ('ckwidmer', '/user/ckwidmer/'), ('nicolo.fusi', '/user/nicolo.fusi/')]
+	programming_language:['Python', 'Python :: 3', 'Python :: 3.7', 'Python :: 3.8']
+----------------------------------------------------------------------------------------------------
+
+Package: principal-fft, Version 1.0.4:
+
+    Short description: Extract principal FFT components for features generation
+    
+    More Info:
+	stars:0
+	forks:0
+	open_issues:0
+	author:[('Simone Salerno', 'mailto:eloquentarduino@gmail.com')]
+	maintainers:[('eloquentarduino', '/user/eloquentarduino/')]
+	development_status:['5 - Production/Stable']
+	intended_audience:['Developers']
+	license:['OSI Approved :: MIT License']
+	programming_language:['Python :: 3', 'Python :: 3.4', 'Python :: 3.5', 'Python :: 3.6']
+	topic:['Scientific/Engineering :: Artificial Intelligence']
+----------------------------------------------------------------------------------------------------
+
+Package: solarium, Version 0.1.1:
+
+    Short description: RaspberryPi based LED controller for artificial sunlight
+    
+    More Info:
+	stars:0
+	forks:0
+	open_issues:0
+	author:[('Johannes Maron', 'mailto:info@johanneshoppe.com')]
+	maintainers:[('codingjoe', '/user/codingjoe/')]
+	license:['OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python', 'Python :: 3', 'Python :: 3 :: Only', 'Python :: 3.8', 'Python :: 3.9']
+----------------------------------------------------------------------------------------------------
+
+Package: metabase-import-export, Version 0.2.1:
+
+    Short description: Export/Import Metabase collections to JSON files.
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:None
+	maintainers:[('seocam', '/user/seocam/')]
+	license:['OSI Approved :: BSD License']
+	programming_language:['Python :: 3']
+----------------------------------------------------------------------------------------------------
+
+Package: aiei, Version 0.1.0:
+
+    Short description: A tiny framework for AI.
+    
+    More Info:
+
+----------------------------------------------------------------------------------------------------
+
+Package: licheepi, Version 0.0.0:
+
+    Short description: licheepi
+    
+    More Info:
+	stars:0
+	forks:0
+	open_issues:0
+	author:[('alan', 'mailto:alan@licheepi.com')]
+	maintainers:[('licheepi', '/user/licheepi/')]
+	license:['OSI Approved :: BSD License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 2.7', 'Python :: 3.5', 'Python :: 3.6', 'Python :: 3.7']
+----------------------------------------------------------------------------------------------------
+
+Package: tox-conda, Version 0.3.0:
+
+    Short description: tox plugin that provides integration with conda
+    
+    More Info:
+	stars:75
+	forks:24
+	open_issues:24
+	author:[("Daniel R. D'Avella", 'mailto:ddavella@stsci.edu')]
+	maintainers:[('drdavella', '/user/drdavella/'), ('gaborbernat', '/user/gaborbernat/')]
+	development_status:['4 - Beta']
+	framework:['tox']
+	intended_audience:['Developers']
+	license:['OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python', 'Python :: 3', 'Python :: 3 :: Only', 'Python :: 3.5', 'Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8', 'Python :: 3.9', 'Python :: Implementation :: CPython']
+	topic:['Software Development :: Testing']
+----------------------------------------------------------------------------------------------------
+
+Package: pysweepme, Version 1.5.5.33b0:
+
+    Short description: load SweepMe! Device Classes from python scripts
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:[('Axel Fischer, Felix Kaschura', 'mailto:pysweepme@sweep-me.net')]
+	maintainers:[('SweepMe', '/user/SweepMe/')]
+	development_status:['4 - Beta']
+	license:['OSI Approved :: MIT License']
+	programming_language:['Python :: 3.6']
+	topic:['Text Processing :: Linguistic']
+----------------------------------------------------------------------------------------------------
+
+Package: ducts, Version 0.0.21:
+
+    Short description: DUplex Communication and Transactional Streaming Web Framework
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:[('teppei@iflab.tokyo', 'mailto:teppei@iflab.tokyo')]
+	maintainers:[('iflb', '/user/iflb/')]
+	development_status:['2 - Pre-Alpha']
+	framework:['AsyncIO']
+	intended_audience:['Developers']
+	license:['OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3']
+----------------------------------------------------------------------------------------------------
+
+Package: sphinxcontrib-towncrier, Version 0.1.0a1:
+
+    Short description: An RST directive for injecting a Towncrier-generated changelog draft containing fragments for the unreleased (next) project version
+    
+    More Info:
+	stars:8
+	forks:4
+	open_issues:3
+	author:[('Sviatoslav Sydorenko', 'mailto:wk+pypi/sphinxcontrib-towncrier@sydorenko.org.ua')]
+	maintainers:[('slsh1o', '/user/slsh1o/'), ('webknjaz', '/user/webknjaz/')]
+	development_status:['3 - Alpha']
+	framework:['Sphinx', 'Sphinx :: Extension']
+	intended_audience:['Developers']
+	license:['OSI Approved :: BSD License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8', 'Python :: 3.9']
+	topic:['Documentation :: Sphinx', 'Software Development :: Documentation', 'System :: Software Distribution', 'Utilities']
+----------------------------------------------------------------------------------------------------
+
+Package: rsactftool, Version 1.1:
+
+    Short description: RSA attack tool (mainly for ctf) - retreive private key from weak public key and/or uncipher data
+    
+    More Info:
+	stars:0
+	forks:0
+	open_issues:0
+	author:None
+	maintainers:[('borari', '/user/borari/')]
+	license:['Other/Proprietary License']
+	programming_language:['Python :: 3', 'Python :: 3.8']
+	topic:['Scientific/Engineering :: Mathematics', 'Security :: Cryptography']
+----------------------------------------------------------------------------------------------------
+
+Package: cs18-api-client, Version 0.0.2.1638:
+
+    Short description: 
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:[('Quali', 'mailto:support@qualisystems.com')]
+	maintainers:[('quali-colony', '/user/quali-colony/')]
+	programming_language:['Python :: 3']
+----------------------------------------------------------------------------------------------------
+
+Package: quica, Version 0.2.2:
+
+    Short description: Quick Inter Coder Agreement in Python
+    
+    More Info:
+	stars:6
+	forks:0
+	open_issues:1
+	author:[('Federico Bianchi', 'mailto:f.bianchi@unibocconi.it')]
+	maintainers:[('vinid', '/user/vinid/')]
+	development_status:['2 - Pre-Alpha']
+	intended_audience:['Developers']
+	license:['OSI Approved :: MIT License']
+	natural_language:['English']
+	programming_language:['Python :: 3', 'Python :: 3.5', 'Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8']
+----------------------------------------------------------------------------------------------------
+
+Package: tw-stock-plugin, Version 0.0.5:
+
+    Short description: Some util function when doing Taiwan stock web scraping and some common stock data parser
+    
+    More Info:
+	stars:None
+	forks:None
+	open_issues:None
+	author:[('Jimmy Yeh', 'mailto:chienfeng0719@hotmail.com')]
+	maintainers:[('chienfeng0719', '/user/chienfeng0719/')]
+	license:['OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3']
+----------------------------------------------------------------------------------------------------
+
+Package: pymarshaler, Version 0.1.1:
+
+    Short description: Package to marshal and unmarshal python objects
+    
+    More Info:
+	stars:2
+	forks:0
+	open_issues:0
+	author:[('Hernan Romer', 'mailto:nanug33@gmail.com')]
+	maintainers:[('hromer', '/user/hromer/')]
+	license:['OSI Approved :: MIT License']
+	operating_system:['OS Independent']
+	programming_language:['Python :: 3']
+----------------------------------------------------------------------------------------------------
+
