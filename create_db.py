@@ -2,17 +2,14 @@ from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, UniqueCons
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from assignments.db_config import DB_USER, DB_PASSWORD, DB_SERVER, DB_NAME
-
-Base = declarative_base()
-DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
-
-engine = create_engine(DB, echo=True)
+from db_config import DB_USER, DB_PASSWORD, DB_SERVER, DB_NAME
 
 # If have not created a database on the server then you can connect directly to the
 # server and execute the following:
 # engine.execute("CREATE DATABASE pypi")
 # engine.execute("USE pypi")
+
+Base = declarative_base()
 
 
 class Package(Base):
@@ -27,14 +24,15 @@ class Package(Base):
     github_forks = Column(Integer)
     github_open_issues = Column(Integer)
 
-    package_operating_system = relationship('OperatingSystem', back_populates='package')
-    package_programming_language = relationship('ProgrammingLanguage', back_populates='package')
-    package_topic = relationship("Topic", back_populates='package')
-    package_environment = relationship('Environment', back_populates='package')
-    package_framework = relationship('Framework', back_populates='package')
-    package_intended_audience = relationship('IntendedAudience', back_populates='package')
+    package_operating_system = relationship('PackageOperatingSystem', back_populates='package')
+    package_programming_language = relationship('PackageProgrammingLanguage', back_populates='package')
+    package_topic = relationship("PackageTopic", back_populates='package')
+    package_environment = relationship('PackageEnvironment', back_populates='package')
+    package_framework = relationship('PackageFramework', back_populates='package')
+    package_intended_audience = relationship('PackageIntendedAudience', back_populates='package')
     package_maintainer = relationship('Maintainer', back_populates='package')
-    package_natural_language = relationship('NaturalLanguage', back_populates='package')
+    package_author = relationship('Author', back_populates='package')
+    package_natural_language = relationship('PackageNaturalLanguage', back_populates='package')
 
     __table_args__ = (UniqueConstraint('name', 'version', name='_name_version_uc'),)
 
@@ -87,7 +85,7 @@ class Framework(Base):
     __tablename__ = 'framework'
     id = Column(Integer, primary_key=True)
     framework = Column(String(64), nullable=False)
-    package = relationship('PackageFramework', back_populates='framework')
+    package_framework = relationship('PackageFramework', back_populates='framework')
 
 
 class PackageFramework(Base):
@@ -103,7 +101,7 @@ class Environment(Base):
     __tablename__ = 'environment'
     id = Column(Integer, primary_key=True)
     environment = Column(String(64), nullable=False)
-    package = relationship('PackageEnvironment', back_populates='environment')
+    package_environment = relationship('PackageEnvironment', back_populates='environment')
 
 
 class PackageEnvironment(Base):
@@ -119,7 +117,7 @@ class Topic(Base):
     __tablename__ = 'topic'
     id = Column(Integer, primary_key=True)
     topic = Column(String(128), nullable=False)
-    package = relationship('PackageTopic', back_populates='topic')
+    package_topic = relationship('PackageTopic', back_populates='topic')
 
 
 class PackageTopic(Base):
@@ -135,7 +133,7 @@ class ProgrammingLanguage(Base):
     __tablename__ = 'programming_language'
     id = Column(Integer, primary_key=True)
     programming_language = Column(String(64), nullable=False)
-    package = relationship('PackageProgrammingLanguage', back_populates='programming_language')
+    package_programming_language = relationship('PackageProgrammingLanguage', back_populates='programming_language')
 
 
 class PackageProgrammingLanguage(Base):
@@ -151,7 +149,7 @@ class OperatingSystem(Base):
     __tablename__ = 'operating_system'
     id = Column(Integer, primary_key=True)
     operating_system = Column(String(64), nullable=False)
-    package = relationship('PackageOperatingSystem', back_populates='operating_system')
+    package_operating_system = relationship('PackageOperatingSystem', back_populates='operating_system')
 
 
 class PackageOperatingSystem(Base):
@@ -167,7 +165,7 @@ class IntendedAudience(Base):
     __tablename__ = 'intended_audience'
     id = Column(Integer, primary_key=True)
     intended_audience = Column(String(128), nullable=False)
-    package = relationship('Package', back_populates='intended_audience')
+    package_intended_audience = relationship('PackageIntendedAudience', back_populates='intended_audience')
 
 
 class PackageIntendedAudience(Base):
@@ -180,6 +178,8 @@ class PackageIntendedAudience(Base):
 
 
 if __name__ == '__main__':
+    DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
+    engine = create_engine(DB, echo=True)
     DBSession = sessionmaker()
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
