@@ -4,9 +4,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup, element
 from typing import List
 
-HOME_PAGE = "https://pypi.org"
-START_PAGE = pypi_url = "https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A+Python+%3A%3A+3"
-NUMBER_OF_SEP_CHARS = 100  # When printing the info for a package - will use a separator char between each pack.
+from config import HOME_PAGE, START_PAGE, NUMBER_OF_SEP_CHARS
 
 # A named tuple class to hold the package snippet info.
 PackageSnippet = namedtuple('PackageSnippet',
@@ -19,6 +17,8 @@ PackageSnippetList = List[PackageSnippet]
 def get_soup(url: str) -> BeautifulSoup:
     """
     Takes a url string and return the BeautifulSoup object of that url
+    :params url: url of page
+    :return: BeautifulSoup object
     """
     response: requests.Response = requests.get(url)
     return BeautifulSoup(response.content, 'html.parser')
@@ -27,6 +27,8 @@ def get_soup(url: str) -> BeautifulSoup:
 def parse_released(tag_: element.Tag) -> datetime.date:
     """
     takes a  bs4.element.Tag with the time of the package release and return the date of release (datetime.date).
+    :params tag_: element.Tag of datetime.date
+    :return: date in format '%Y-%m-%d'
     """
     # the datetime data from pypi is not consistent in its format.
     # instead of leaving it as strings, this code will parse a date object (discarded the time info.)
@@ -37,6 +39,8 @@ def parse_released(tag_: element.Tag) -> datetime.date:
 def get_next_page(page: BeautifulSoup) -> str:
     """
     finds the 'Next' button of a page and return the link to the next page as a string.
+    :params page: BeautifulSoup object
+    :return: url to next page
     """
     button_group = page.find_all('a', class_='button button-group__button')
     for button in reversed(button_group):
@@ -87,6 +91,8 @@ def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup) ->
 def get_package_details_url(package_snippet: PackageSnippet) -> str:
     """
     returns the full link to the detailed package page of a PackageSnippet
+    :params package_snippet: PackageSnippet object
+    :return: link to the main page of package
     """
     return HOME_PAGE + package_snippet.link
 

@@ -2,8 +2,7 @@ import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup
 
-PAGE = 'https://pypi.org/classifiers/'
-CLASSIFIER_INDEX = 1
+from config import PAGE, CLASSIFIER_INDEX
 
 
 def get_soup(url: str) -> BeautifulSoup:

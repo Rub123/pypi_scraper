@@ -3,14 +3,13 @@ from collections import defaultdict
 from bs4 import BeautifulSoup, element
 
 from scrap_package_snippet import PackageSnippet
-from pypi_classifiers import PAGE as CLASSIFIERS_PAGE
 from pypi_classifiers import get_all_classifiers
 
+from config import SKIP_SECTIONS
+from config import PAGE as CLASSIFIERS_PAGE
 
 # titles of information available in sidebar sections
 # ['Navigation', 'Project links', 'Statistics', 'Meta', 'Maintainers', 'Classifiers']
-
-SKIP_SECTIONS = 'Navigation', 'Project links'  # sections we decided to skip and not scarp information
 
 
 def get_meta(sidebar_section_div: element.Tag) -> dict:
@@ -111,7 +110,7 @@ def get_classifiers(sidebar_section_div: element.Tag) -> dict:
 
 
 # define a dictionary that holds as key the title of the side bar info, and as value the function you need to scarp it
-sidebar_section_getters = {
+sidebar_section_getters = { # todo should this also be in the config?
     # 'Navigation': None,
     # 'Project links': None,
     'Statistics': get_statistics,

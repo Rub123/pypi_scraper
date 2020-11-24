@@ -2,8 +2,7 @@ from scrap_package_page import scrap_side_bars
 from scrap_package_snippet import PackageSnippet, get_soup, get_n_pages_of_packages_snippets, get_package_details_url
 from scrap_package_snippet import START_PAGE
 
-SNIPPET_PAGES = 50  # 20 packages per page so 50 pages is for scraping a 1000 packages.
-PACKAGE_SEPARATORS_CHARS = 100  # used to decide the length of a line that separates each package when printing
+from config import SNIPPET_PAGES, PACKAGE_SEPARATORS_CHARS
 
 
 def append_to_file(text: str, file: str) -> None:
@@ -18,7 +17,6 @@ def append_to_file(text: str, file: str) -> None:
 
 def print_data(n_pages: int = SNIPPET_PAGES, save_file=None) -> None:
     """ Prints the scraped data to the screen. If save_file will also save the information to a file
-
     :param n_pages: int, number of pages
     :param save_file: An Optional file path to save the scraped data to.
     """
