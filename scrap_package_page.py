@@ -35,6 +35,7 @@ def get_meta(sidebar_section_div: element.Tag) -> dict:
     return result_dict
 
 
+
 def get_maintainers(sidebar_section_div: element.Tag) -> dict:
     """Getting maintainers list from maintainers sidebar section (if available).
 
