@@ -2,8 +2,7 @@ import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup
 
-PAGE = 'https://pypi.org/classifiers/'
-CLASSIFIER_INDEX = 1
+from config import PAGE, CLASSIFIER_INDEX
 
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -29,7 +28,7 @@ def get_all_classifiers(url=PAGE) -> dict:
     classifiers_dict = defaultdict(set)
 
     for li in ul.find_all('li'):
-        classifier_type,  *classifier_type_values = li.text.split('\n')[CLASSIFIER_INDEX].split(' :: ')
+        classifier_type,  *classifier_type_values = li.text.split('\n')[CLASSIFIER_INDEX]
         classifiers_dict[classifier_type].add(''.join(classifier_type_values))
 
     return classifiers_dict
