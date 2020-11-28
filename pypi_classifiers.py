@@ -28,7 +28,7 @@ def get_all_classifiers(url=PAGE) -> dict:
     classifiers_dict = defaultdict(set)
 
     for li in ul.find_all('li'):
-        classifier_type,  *classifier_type_values = li.text.split('\n')[CLASSIFIER_INDEX]
+        classifier_type,  *classifier_type_values = li.text.split('\n')[CLASSIFIER_INDEX].split(' :: ', 1)
         classifiers_dict[classifier_type].add(''.join(classifier_type_values))
 
     return classifiers_dict
