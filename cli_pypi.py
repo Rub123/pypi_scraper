@@ -35,8 +35,8 @@ def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=None) -
 
 def main():
     """
-    user chooses what to scape from a list of options.
-    Default - programming language python
+    user chooses what to scrape from a list of options.
+    Default - programming language python, 5 pages and print to screen (not saving to local db)
     """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
