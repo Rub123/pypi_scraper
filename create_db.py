@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, UniqueConstraint, Table
+from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
@@ -61,7 +61,6 @@ package_maintainer_association = Table(
 )
 
 
-
 class Package(Base):
     __tablename__ = 'package'
     id = Column(Integer, primary_key=True)
@@ -76,6 +75,9 @@ class Package(Base):
     github_forks = Column(Integer)
     github_open_issues = Column(Integer)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Package(name='{self.name}', version={'self.version'}, release_date='{str(self.release_date)}')>"
 
     package_operating_system = relationship('OperatingSystem',
                                             secondary=package_operating_system_association,
@@ -120,6 +122,9 @@ class Maintainer(Base):
                                        secondary=package_maintainer_association,
                                        back_populates='package_maintainer')
 
+    def __repr__(self):
+        return f"<Maintainer(name='{self.name}')>"
+
 
 class NaturalLanguage(Base):
     __tablename__ = 'natural_language'
@@ -128,6 +133,9 @@ class NaturalLanguage(Base):
     natural_language_packages = relationship('Package',
                                              secondary=package_natural_language_association,
                                              back_populates='package_natural_language')
+
+    def __repr__(self):
+        return f"<NaturalLanguage(natural_language='{self.natural_language}')>"
 
 
 class Framework(Base):
@@ -138,6 +146,9 @@ class Framework(Base):
                                       secondary=package_framework_association,
                                       back_populates='package_framework')
 
+    def __repr__(self):
+        return f"<Framework(framework='{self.framework}')>"
+
 
 class Environment(Base):
     __tablename__ = 'environment'
@@ -146,6 +157,9 @@ class Environment(Base):
     environment_packages = relationship('Package',
                                         secondary=package_environment_association,
                                         back_populates='package_environment')
+
+    def __repr__(self):
+        return f"<Environment(environment='{self.environment}')>"
 
 
 class Topic(Base):
@@ -156,6 +170,9 @@ class Topic(Base):
                                   secondary=package_topic_association,
                                   back_populates='package_topic')
 
+    def __repr__(self):
+        return f"<Topic(topic='{self.topic}')>"
+
 
 class ProgrammingLanguage(Base):
     __tablename__ = 'programming_language'
@@ -164,6 +181,9 @@ class ProgrammingLanguage(Base):
     programming_language_packages = relationship('Package',
                                                  secondary=package_programming_language_association,
                                                  back_populates='package_programming_language')
+
+    def __repr__(self):
+        return f"<ProgrammingLanguage(programming_language='{self.programming_language}')>"
 
 
 class OperatingSystem(Base):
@@ -174,6 +194,9 @@ class OperatingSystem(Base):
                                              secondary=package_operating_system_association,
                                              back_populates='package_operating_system')
 
+    def __repr__(self):
+        return f"<OperatingSystem(operating_system='{self.operating_system}')>"
+
 
 class IntendedAudience(Base):
     __tablename__ = 'intended_audience'
@@ -182,6 +205,9 @@ class IntendedAudience(Base):
     intended_audience_packages = relationship('Package',
                                               secondary=package_intended_audience_association,
                                               back_populates='package_intended_audience')
+
+    def __repr__(self):
+        return f"<IntendedAudience(intended_audience='{self.intended_audience}')>"
 
 
 if __name__ == '__main__':
