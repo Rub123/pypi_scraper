@@ -329,5 +329,5 @@ def insert_or_update_date(n_pages: int = SNIPPET_PAGES, start_page: str = START_
         session.commit()  # commit record.
 
 
-if __name__ == '__main__':
-    insert_or_update_date()
+# if __name__ == '__main__':
+#     insert_or_update_date()
