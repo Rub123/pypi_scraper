@@ -1,48 +1,35 @@
-from config import START_DIC
 import argparse
+from insert_data import get_data_dict, insert_or_update_date
+from scrap_package_snippet import PackageSnippet
 
-from scrap_package_page import scrap_side_bars
-from scrap_package_snippet import PackageSnippet, get_soup, get_n_pages_of_packages_snippets, get_package_details_url
-from scrap_package_snippet import START_PAGE
-
-from config import SNIPPET_PAGES, PACKAGE_SEPARATORS_CHARS
+from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
 
 
-def append_to_file(text: str, file: str) -> None:
-    """Add 'text' to a file if exist (creating the file if it dose not).
-    :param text: text to append to file
-    :param file: path to file
-    """
-    with open(file, 'a', encoding='utf-8') as f:
-        f.write(text)
-
-
-def print_data(start_link: str, n_pages: int = 5, save_file=None) -> None:
-    """ Prints the scraped data to the screen. If save_file will also save the information to a file
+def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=None) -> None:
+    """ Prints the scraped data to the screen. If save_file will also save the information to database.
     :param start_link: link to start scraping from
     :param n_pages: int, number of pages
-    :param save_file: An Optional file path to save the scraped data to.
+    :param save_to_db: An argument to save the scraped data to database.
     """
-    packs_snips = get_n_pages_of_packages_snippets(n_pages, get_soup(start_link))
-    packs_soups = (get_soup(get_package_details_url(pack)) for pack in packs_snips)
-    data = (scrap_side_bars(soup, snip) for snip, soup in zip(packs_snips, packs_soups))
 
-    for index, data_dict in enumerate(data, start=1):
-        for pack_snip, pack_info in data_dict.items():
-            pack_snip: PackageSnippet
-            msg = f"""Package: {str(pack_snip.name)}, Version {str(pack_snip.version)}:
+    for index, data in enumerate(get_data_dict(n_pages=n_pages, start_page=start_link), start=1):
+        if save_to_db:
+            insert_or_update_date(n_pages, start_link)
+        else:
+            for pack_snip, pack_info in data.items():
+                pack_snip: PackageSnippet
+                msg = f"""Package: {str(pack_snip.name)}, Version {str(pack_snip.version)}:
+    
+        Short description: {str(pack_snip.description)}
+    
+        More Info:"""
 
-    Short description: {str(pack_snip.description)}
+                info_msg = '\n'.join('\t' + key + ':' + str(value) for key, value in pack_info.items())
 
-    More Info:"""
+                print(msg)
+                print(info_msg)
+                print('-' * PACKAGE_SEPARATORS_CHARS)
 
-            info_msg = '\n'.join('\t' + key + ':' + str(value) for key, value in pack_info.items())
-
-            print(msg)
-            print(info_msg)
-            print('-' * PACKAGE_SEPARATORS_CHARS)
-            if save_file:
-                append_to_file('\n'.join([msg, info_msg, ('-' * PACKAGE_SEPARATORS_CHARS), '\n']), save_file)
     print(f'Scraped {index} packages!')  # the last index form the enumerate loop above.
 
 
@@ -54,7 +41,7 @@ def main():
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-t', '--topic', choices=[1, 2, 3, 4, 5], type=int,
-                        help="choose topic to scrape. 1-Communications, 2-Database, \
+                       help="choose topic to scrape. 1-Communications, 2-Database, \
                         3-Games/Entertainment, 4-Internet, 5-Scientific/Engineering")
 
     group.add_argument('-o', '--op', choices=[1, 2, 3], type=int,
@@ -76,16 +63,15 @@ def main():
     args = parser.parse_args()
 
     if args.topic is not None:
-        print_data(START_DIC["topic"][args.topic], args.number, args.save)
+        print_data(START_DIC["topic"][str(args.topic)], args.number, args.save)
 
     elif args.op is not None:
-        print_data(START_DIC["op"][args.op], args.number, args.save)
+        print_data(START_DIC["op"][str(args.op)], args.number, args.save)
 
     elif args.framework is not None:
-        print_data(START_DIC["framework"][args.framework], args.number, args.save)
+        print_data(START_DIC["framework"][str(args.framework)], args.number, args.save)
 
     elif args.programming is not None:
-        print(args.programming)
         print_data(START_DIC["programming"][str(args.programming)], args.number, args.save)
 
     else:

@@ -4,7 +4,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup, element
 from typing import List
 
-from config import HOME_PAGE, START_PAGE, NUMBER_OF_SEP_CHARS, HEADERS, TIMEOUT
+from config import HOME_PAGE, HEADERS, TIMEOUT
 
 # A named tuple class to hold the package snippet info.
 PackageSnippet = namedtuple('PackageSnippet',
