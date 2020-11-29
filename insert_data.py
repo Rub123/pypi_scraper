@@ -124,13 +124,13 @@ def get_maintainers(data_dict: dict) -> list:
     return maintainer_list
 
 
-def create_new_maintainer(maintainer_dict: dict, session_: Session, package) -> None:
+def create_new_maintainer(maintainer_dict: dict, session_: Session, package: Package) -> None:
     """Adds maintainers to the package package_maintainer. if the maintainer is not
     already in the database in the maintainer table then the code adds the maintainer to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param maintainer_dict: A dict of the maintainer data.
     :param session_: sqlalchemy.orm.session.Session.
-    :param package:
+    :param package: A package object (sqlalchemy table)
     """
 
     name = maintainer_dict.get('name')
@@ -145,11 +145,12 @@ def create_new_maintainer(maintainer_dict: dict, session_: Session, package) -> 
         package.package_maintainer.append(maintainer)
 
 
-def create_new_environments(data_dict: dict, package, session_: Session = session) -> None:
-    """
+def create_new_environments(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds environments to the package package_environment. if the environment is not
+    already in the database in the environment table then the code adds the environment to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
     """
     data = data_dict.values()
@@ -164,11 +165,12 @@ def create_new_environments(data_dict: dict, package, session_: Session = sessio
                     package.package_environment.append(Environment(environment=environment))
 
 
-def create_new_programming_languages(data_dict: dict, package, session_: Session = session) -> None:
-    """
-
+def create_new_programming_languages(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds programming languages to the package package_programming_language. if the programming language is not
+    already in the database in the programming_language table then the code adds the programming language to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
     """
     data = data_dict.values()
@@ -185,11 +187,12 @@ def create_new_programming_languages(data_dict: dict, package, session_: Session
                         ProgrammingLanguage(programming_language=programming_language))
 
 
-def create_new_operating_systems(data_dict: dict, package, session_: Session = session) -> None:
-    """
-
+def create_new_operating_systems(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds operating systems to the package package_operating_system. if the operating system is not
+    already in the database in the operating_system table then the code adds the operating system to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
     """
     data = data_dict.values()
@@ -205,11 +208,12 @@ def create_new_operating_systems(data_dict: dict, package, session_: Session = s
                     package.package_operating_system.append(OperatingSystem(operating_system=operating_system))
 
 
-def create_new_intended_audiences(data_dict: dict, package, session_: Session = session) -> None:
-    """
-
+def create_new_intended_audiences(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds intended audiences to the package package_intended_audience. if the intended audience is not
+    already in the database in the intended_audience table then the code adds the intended audience to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
     """
     data = data_dict.values()
@@ -225,11 +229,12 @@ def create_new_intended_audiences(data_dict: dict, package, session_: Session = 
                     package.package_intended_audience.append(IntendedAudience(intended_audience=intended_audience))
 
 
-def create_new_frameworks(data_dict: dict, package, session_: Session = session) -> None:
-    """
-
+def create_new_frameworks(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds frameworks to the package package_framework. if the framework is not
+    already in the database in the framework table then the code adds the framework to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
     """
     data = data_dict.values()
@@ -244,13 +249,13 @@ def create_new_frameworks(data_dict: dict, package, session_: Session = session)
                     package.package_framework.append(Framework(framework=framework))
 
 
-def create_new_topics(data_dict: dict, package, session_: Session = session) -> None:
-    """
-
+def create_new_topics(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds topics to the package package_topic. if the topic is not
+    already in the database in the topic table then the code adds the topic to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.Session.
-    :return:
     """
 
     data = data_dict.values()
@@ -265,8 +270,15 @@ def create_new_topics(data_dict: dict, package, session_: Session = session) -> 
                     package.package_topic.append(Topic(topic=topic))
 
 
-def create_new_natural_languages(data_dict: dict, package, session_: Session = session) -> None:
-
+def create_new_natural_languages(data_dict: dict, package: Package, session_: Session = session) -> None:
+    """Adds natural languages to the package package_natural_language. if the natural language is not
+    already in the database in the natural_language table then the code adds the natural languages to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
+    :param data_dict: Dict with package info (that is returned from the scraper).
+    :param package:
+    :param session_: sqlalchemy.orm.session.Session.
+    :return:
+    """
     data = data_dict.values()
     for a_dict in data:
         natural_languages = a_dict.get('natural_language')

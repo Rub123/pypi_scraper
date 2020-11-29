@@ -6,7 +6,7 @@ from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
 
 
 def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=None) -> None:
-    """ Prints the scraped data to the screen. If save_file will also save the information to database.
+    """ Prints the scraped data to the screen. If save_to_db will also save the information to database.
     :param start_link: link to start scraping from
     :param n_pages: int, number of pages
     :param save_to_db: An argument to save the scraped data to database.
