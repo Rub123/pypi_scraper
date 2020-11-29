@@ -2,7 +2,7 @@ import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup
 
-from config import PAGE, CLASSIFIER_INDEX
+from config import PAGE, CLASSIFIER_INDEX, HEADERS, TIMEOUT
 
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -11,7 +11,7 @@ def get_soup(url: str) -> BeautifulSoup:
     :param url: url as string to get in BeautifulSoup from
     :return: BeautifulSoup object
     """
-    response: requests.Response = requests.get(url)
+    response: requests.Response = requests.get(url, headers=HEADERS,  timeout=TIMEOUT)
     return BeautifulSoup(response.content, 'html.parser')
 
 
@@ -34,7 +34,7 @@ def get_all_classifiers(url=PAGE) -> dict:
     return classifiers_dict
 
 
-if __name__ == '__main__':
-    classifiers = get_all_classifiers()
-    for key, value in classifiers.items():
-        print(key, value)
+# if __name__ == '__main__':
+#     classifiers = get_all_classifiers()
+#     for key, value in classifiers.items():
+#         print(key, value)

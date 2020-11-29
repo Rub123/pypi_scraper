@@ -6,7 +6,7 @@ from scrap_package_snippet import PackageSnippet
 from pypi_classifiers import get_all_classifiers
 
 from config import SKIP_SECTIONS
-from config import PAGE as CLASSIFIERS_PAGE
+from config import PAGE as CLASSIFIERS_PAGE, HEADERS, TIMEOUT
 
 # titles of information available in sidebar sections
 # ['Navigation', 'Project links', 'Statistics', 'Meta', 'Maintainers', 'Classifiers']
@@ -35,7 +35,6 @@ def get_meta(sidebar_section_div: element.Tag) -> dict:
     return result_dict
 
 
-
 def get_maintainers(sidebar_section_div: element.Tag) -> dict:
     """Getting maintainers list from maintainers sidebar section (if available).
 
@@ -62,7 +61,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
     for github_div in sidebar_section_div.find_all('div', class_='github-repo-info'):
         if github_div:
             data_url = github_div.get('data-url')
-            json_data = requests.get(data_url).json()
+            json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
             if 'message' in json_data.keys() and len(json_data.keys()) == 2:
                 # no data
                 continue
@@ -111,7 +110,7 @@ def get_classifiers(sidebar_section_div: element.Tag) -> dict:
 
 
 # define a dictionary that holds as key the title of the side bar info, and as value the function you need to scarp it
-sidebar_section_getters = { # todo should this also be in the config?
+sidebar_section_getters = {
     # 'Navigation': None,
     # 'Project links': None,
     'Statistics': get_statistics,
@@ -139,4 +138,6 @@ def scrap_side_bars(pack_soup: BeautifulSoup, pack_snippet: PackageSnippet):
         if sidebar_title in SKIP_SECTIONS:
             continue
         data[pack_snippet].update(sidebar_section_getters[sidebar_title](div))
+
+    table_keys = ['']
     return data

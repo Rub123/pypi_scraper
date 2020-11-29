@@ -4,7 +4,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup, element
 from typing import List
 
-from config import HOME_PAGE, START_PAGE, NUMBER_OF_SEP_CHARS
+from config import HOME_PAGE, START_PAGE, NUMBER_OF_SEP_CHARS, HEADERS, TIMEOUT
 
 # A named tuple class to hold the package snippet info.
 PackageSnippet = namedtuple('PackageSnippet',
@@ -20,7 +20,7 @@ def get_soup(url: str) -> BeautifulSoup:
     :params url: url of page
     :return: BeautifulSoup object
     """
-    response: requests.Response = requests.get(url)
+    response: requests.Response = requests.get(url, headers=HEADERS,  timeout=TIMEOUT)
     return BeautifulSoup(response.content, 'html.parser')
 
 
@@ -97,18 +97,18 @@ def get_package_details_url(package_snippet: PackageSnippet) -> str:
     return HOME_PAGE + package_snippet.link
 
 
-if __name__ == '__main__':
-    start_soup = get_soup(START_PAGE)
-    while True:
-        try:
-            pages = int(input('How many pages to scrape? '))
-            break
-        except ValueError:
-            print('Try again!')
-    pages = pages if pages else 1
-    packs_snips = get_n_pages_of_packages_snippets(pages, start_soup)
-    packs_urls = (get_package_details_url(pack) for pack in packs_snips)
-    for pack_snip, pack_url in zip(packs_snips, packs_urls):
-        print(pack_snip)
-        print(pack_url)
-        print('-' * NUMBER_OF_SEP_CHARS)
+# if __name__ == '__main__':
+#     start_soup = get_soup(START_PAGE)
+#     while True:
+#         try:
+#             pages = int(input('How many pages to scrape? '))
+#             break
+#         except ValueError:
+#             print('Try again!')
+#     pages = pages if pages else 1
+#     packs_snips = get_n_pages_of_packages_snippets(pages, start_soup)
+#     packs_urls = (get_package_details_url(pack) for pack in packs_snips)
+#     for pack_snip, pack_url in zip(packs_snips, packs_urls):
+#         print(pack_snip)
+#         print(pack_url)
+#         print('-' * NUMBER_OF_SEP_CHARS)

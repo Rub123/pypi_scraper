@@ -286,7 +286,6 @@ def insert_or_update_date(n_pages: int = SNIPPET_PAGES, start_page: str = START_
 
     :param start_page: The page to start scraping from.
     :param n_pages: int, number of pages (each page has 20 packages).
-    :return:
     """
     for data_dict in get_data_dict(n_pages=n_pages, start_page=start_page):
 
