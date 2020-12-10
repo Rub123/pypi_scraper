@@ -71,13 +71,15 @@ class Package(Base):
     description = Column(String(600))
     package_license = Column(String(255))
     release_date = Column(DateTime)
-    github_stars = Column(Integer)
-    github_forks = Column(Integer)
-    github_open_issues = Column(Integer)
+    # github_stars = Column(Integer)
+    # github_forks = Column(Integer)
+    # github_open_issues = Column(Integer)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
         return f"<Package(name='{self.name}', version={'self.version'}, release_date='{str(self.release_date)}')>"
+
+    github_info = relationship('GithubInfo', uselist=False, back_populates='package')
 
     package_operating_system = relationship('OperatingSystem',
                                             secondary=package_operating_system_association,
@@ -110,6 +112,22 @@ class Package(Base):
     package_natural_language = relationship('NaturalLanguage',
                                             secondary=package_natural_language_association,
                                             back_populates='natural_language_packages')
+
+
+class GithubInfo(Base):
+    __tablename__ = 'github_info'
+    id = Column(Integer, primary_key=True)
+    github_url = Column(String(255))
+    github_stars = Column(Integer)
+    github_forks = Column(Integer)
+    github_open_issues = Column(Integer)
+    github_contributors = Column(Integer)
+
+    package_id = Column(Integer, ForeignKey('package.id'))
+    package = relationship('Package', back_populates='github_info')
+
+
+
 
 
 class Maintainer(Base):
@@ -211,9 +229,10 @@ class IntendedAudience(Base):
 
 
 if __name__ == '__main__':
-    DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
+    DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}'
     engine = create_engine(DB, echo=True)
-
+    engine.execute(f"CREATE DATABASE {DB_NAME}")
+    engine.execute(f"USE {DB_NAME}")
     DBSession = sessionmaker()
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)

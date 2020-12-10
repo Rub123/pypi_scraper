@@ -57,7 +57,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
     :param sidebar_section_div: div bs4.element.Tag with the relevant statistics data.
     :return: A dict with github statistics metrics (stars, forks, open issues).
     """
-    statistics = {'stars': None, 'forks': None, 'open_issues': None,  'html_url': None}
+    statistics = {'github_stars': None, 'github_forks': None, 'github_open_issues': None,  'github_url': None}
     for github_div in sidebar_section_div.find_all('div', class_='github-repo-info'):
         if github_div:
             data_url = github_div.get('data-url')
@@ -66,10 +66,10 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
                 # no data
                 continue
             else:
-                statistics['stars'] = json_data.get('stargazers_count')
-                statistics['forks'] = json_data.get('forks')
-                statistics['open_issues'] = json_data.get('open_issues_count')
-                statistics['html_url'] = json_data.get('html_url')
+                statistics['github_stars'] = json_data.get('stargazers_count')
+                statistics['github_forks'] = json_data.get('forks')
+                statistics['github_open_issues'] = json_data.get('open_issues_count')
+                statistics['github_url'] = json_data.get('html_url')
                 break
     return statistics
 

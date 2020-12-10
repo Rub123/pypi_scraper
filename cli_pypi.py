@@ -1,7 +1,7 @@
 import argparse
 from scrap_package_snippet import PackageSnippet
 from scrap_package import get_data_dict
-from orchestrator import insert_or_update_date
+from orchestrator import insert_or_update_date, get_github_info
 
 from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
 
@@ -14,6 +14,7 @@ def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=False) 
     """
 
     for index, data in enumerate(get_data_dict(n_pages=n_pages, start_page=start_link), start=1):
+        data = get_github_info(data)
         if save_to_db:
             insert_or_update_date(data)
 

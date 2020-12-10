@@ -1,5 +1,5 @@
 from db.create_db import Package, Maintainer, ProgrammingLanguage, NaturalLanguage, OperatingSystem,\
-    IntendedAudience, Framework, Environment, Topic
+    IntendedAudience, Framework, Environment, Topic, GithubInfo
 import sqlalchemy.orm.session as session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
@@ -243,3 +243,29 @@ def create_new_natural_languages(data_dict: dict, package: Package, session_: se
                     package.package_natural_language.append(natural_language_in_db)
                 else:
                     package.package_natural_language.append(NaturalLanguage(natural_language=natural_language))
+
+
+def create_new_github_info(data_dict: dict, package: Package, session_: session) -> None:
+    """Adds natural languages to the package package_natural_language. if the natural language is not
+    already in the database in the natural_language table then the code adds the natural languages to the table.
+    Dose NOT COMMIT to the database but only adds to the session.
+    :param data_dict: Dict with package info (that is returned from the scraper).
+    :param package:
+    :param session_: sqlalchemy.orm.session.
+    :return:
+    """
+    data = data_dict.values()
+    for a_dict in data:
+        github_url = a_dict.get('github_url')
+        if github_url:
+
+            github_url_in_db = session_.query(GithubInfo).filter(
+                GithubInfo.github_url == github_url).first()
+            if github_url_in_db:
+                package.github_info = github_url_in_db
+            else:
+                package.github_info = GithubInfo(github_url=github_url,
+                                                 github_stars=a_dict.get('github_stars'),
+                                                 github_forks=a_dict.get('github_forks'),
+                                                 github_open_issues=a_dict.get('github_open_issues'),
+                                                 github_contributors=a_dict.get('github_contributors'))
