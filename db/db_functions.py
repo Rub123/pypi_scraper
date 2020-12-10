@@ -1,34 +1,29 @@
-from scrap_package_page import scrap_side_bars
-from scrap_package_snippet import get_soup, get_package_details_url,\
-    get_packages_snippets_from_page, get_next_page
-from create_db import Package, Maintainer, ProgrammingLanguage, NaturalLanguage, OperatingSystem,\
+from db.create_db import Package, Maintainer, ProgrammingLanguage, NaturalLanguage, OperatingSystem,\
     IntendedAudience, Framework, Environment, Topic
+import sqlalchemy.orm.session as session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from config import SNIPPET_PAGES, DB, START_PAGE, HOME_PAGE
+import configparser
+from db.db_logger import SQL_LOGGER
+from pathlib import Path
 
-engine = create_engine(DB, echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
+db_config_file = Path('db/db_config.ini')
 
 
-def get_data_dict(n_pages: int = SNIPPET_PAGES, start_page=START_PAGE):
-    """ Yields the scraped data as a dict, one by one.
+def create_db_session():
+    db_url = get_db_url()
+    engine = create_engine(db_url, echo_pool=True, logging_name=SQL_LOGGER.name)
+    return sessionmaker(bind=engine)()
 
-    :param start_page: The page to start scraping from.
-    :param n_pages: int, number of pages (each page has 20 packages).
-    """
-    page_url = start_page
-    page = get_soup(page_url)
-    for _ in range(n_pages):
-        packages_snippets = get_packages_snippets_from_page(page)
-        page_url = HOME_PAGE + get_next_page(page)
-        page = get_soup(page_url)  # update to the next page
-        for packages_snippet in packages_snippets:
 
-            pack_soup = get_soup(get_package_details_url(packages_snippet))
-            data = scrap_side_bars(pack_soup, packages_snippet)
-            yield data
+def get_db_url(config_file=db_config_file):
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    db_name = config['db']['db_name']
+    server = config['db']['server']
+    user = config['db']['user']
+    password = config['db']['password']
+    return f'mysql+mysqlconnector://{user}:{password}@{server}/{db_name}'
 
 
 def name_is_already_in_list(name: str, list_of_dicts: list) -> bool:
@@ -51,48 +46,6 @@ def is_email(string):
     :return:
     """
     return '@' in string
-
-
-def get_package_data(data_dict: dict) -> dict:
-    """Given a dict of the package returns the relevant fields of the package table.
-
-    :param data_dict: dict with package info (that is returned from the scraper).
-    :return: a dict with only the relevant fields of the package table.
-    """
-    start_dict = {'name': None,
-                  'version': None,
-                  'author': None,
-                  'author_info': None,
-                  'description': None,
-                  'package_license': None,
-                  'release_date': None,
-                  'github_stars': None,
-                  'github_forks': None,
-                  'github_open_issues': None}
-
-    package_snippet = next(iter(data_dict.keys()))  # only one
-
-    start_dict['name'] = package_snippet.name
-    start_dict['version'] = package_snippet.version
-    start_dict['release_date'] = package_snippet.released
-    start_dict['description'] = package_snippet.description
-    start_dict['description'] = start_dict['description'][:600]
-    data = data_dict.values()
-
-    for a_dict in data:
-        start_dict['package_license'] = a_dict.get('license')
-        if start_dict['package_license'] is not None:
-            start_dict['package_license'] = start_dict['package_license'][0]  # the first and only in the list.
-        start_dict['github_stars'] = a_dict.get('stars')
-        start_dict['github_forks'] = a_dict.get('forks')
-        start_dict['github_open_issues'] = a_dict.get('open_issues')
-        author = a_dict.get('author')
-        if author is not None:
-            author = a_dict.get('author')[0]  # list of 1 tuple
-            start_dict['author'] = author[0]  # name
-            start_dict['author_info'] = author[1]  # info
-
-    return start_dict
 
 
 def get_maintainers(data_dict: dict) -> list:
@@ -124,12 +77,12 @@ def get_maintainers(data_dict: dict) -> list:
     return maintainer_list
 
 
-def create_new_maintainer(maintainer_dict: dict, session_: Session, package: Package) -> None:
+def create_new_maintainer(maintainer_dict: dict, session_: session, package: Package) -> None:
     """Adds maintainers to the package package_maintainer. if the maintainer is not
     already in the database in the maintainer table then the code adds the maintainer to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param maintainer_dict: A dict of the maintainer data.
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     :param package: A package object (sqlalchemy table)
     """
 
@@ -145,13 +98,13 @@ def create_new_maintainer(maintainer_dict: dict, session_: Session, package: Pac
         package.package_maintainer.append(maintainer)
 
 
-def create_new_environments(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_environments(data_dict: dict, package: Package, session_: session) -> None:
     """Adds environments to the package package_environment. if the environment is not
     already in the database in the environment table then the code adds the environment to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
     data = data_dict.values()
     for a_dict in data:
@@ -165,13 +118,13 @@ def create_new_environments(data_dict: dict, package: Package, session_: Session
                     package.package_environment.append(Environment(environment=environment))
 
 
-def create_new_programming_languages(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_programming_languages(data_dict: dict, package: Package, session_: session) -> None:
     """Adds programming languages to the package package_programming_language. if the programming language is not
     already in the database in the programming_language table then the code adds the programming language to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
     data = data_dict.values()
     for a_dict in data:
@@ -187,13 +140,13 @@ def create_new_programming_languages(data_dict: dict, package: Package, session_
                         ProgrammingLanguage(programming_language=programming_language))
 
 
-def create_new_operating_systems(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_operating_systems(data_dict: dict, package: Package, session_: session) -> None:
     """Adds operating systems to the package package_operating_system. if the operating system is not
     already in the database in the operating_system table then the code adds the operating system to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
     data = data_dict.values()
     for a_dict in data:
@@ -208,13 +161,13 @@ def create_new_operating_systems(data_dict: dict, package: Package, session_: Se
                     package.package_operating_system.append(OperatingSystem(operating_system=operating_system))
 
 
-def create_new_intended_audiences(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_intended_audiences(data_dict: dict, package: Package, session_: session) -> None:
     """Adds intended audiences to the package package_intended_audience. if the intended audience is not
     already in the database in the intended_audience table then the code adds the intended audience to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
     data = data_dict.values()
     for a_dict in data:
@@ -229,13 +182,13 @@ def create_new_intended_audiences(data_dict: dict, package: Package, session_: S
                     package.package_intended_audience.append(IntendedAudience(intended_audience=intended_audience))
 
 
-def create_new_frameworks(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_frameworks(data_dict: dict, package: Package, session_: session) -> None:
     """Adds frameworks to the package package_framework. if the framework is not
     already in the database in the framework table then the code adds the framework to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
     data = data_dict.values()
     for a_dict in data:
@@ -249,13 +202,13 @@ def create_new_frameworks(data_dict: dict, package: Package, session_: Session =
                     package.package_framework.append(Framework(framework=framework))
 
 
-def create_new_topics(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_topics(data_dict: dict, package: Package, session_: session) -> None:
     """Adds topics to the package package_topic. if the topic is not
     already in the database in the topic table then the code adds the topic to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package: A package object (sqlalchemy table)
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     """
 
     data = data_dict.values()
@@ -270,13 +223,13 @@ def create_new_topics(data_dict: dict, package: Package, session_: Session = ses
                     package.package_topic.append(Topic(topic=topic))
 
 
-def create_new_natural_languages(data_dict: dict, package: Package, session_: Session = session) -> None:
+def create_new_natural_languages(data_dict: dict, package: Package, session_: session) -> None:
     """Adds natural languages to the package package_natural_language. if the natural language is not
     already in the database in the natural_language table then the code adds the natural languages to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
     :param package:
-    :param session_: sqlalchemy.orm.session.Session.
+    :param session_: sqlalchemy.orm.session.
     :return:
     """
     data = data_dict.values()
@@ -290,56 +243,3 @@ def create_new_natural_languages(data_dict: dict, package: Package, session_: Se
                     package.package_natural_language.append(natural_language_in_db)
                 else:
                     package.package_natural_language.append(NaturalLanguage(natural_language=natural_language))
-
-
-def insert_or_update_date(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE) -> None:
-    """Given a number of pages to scrap and a starting page.
-    inserts or updates the data to the database.
-
-    :param start_page: The page to start scraping from.
-    :param n_pages: int, number of pages (each page has 20 packages).
-    """
-    for data_dict in get_data_dict(n_pages=n_pages, start_page=start_page):
-
-        package_data = get_package_data(data_dict)
-        if not package_data:
-            continue
-        package_name = package_data.get('name')
-        package_in_db = session.query(Package).filter(Package.name == package_name).first()
-        if package_in_db:
-            if package_data.get('version') == package_in_db.version:
-                continue
-            else:
-                package = session.merge(package_in_db)
-                package.version = package_data.get('version')
-                package.author = package_data.get('author')
-                package.author_info = package_data.get('author_info')
-                package.description = package_data.get('description')
-                package.package_license = package_data.get('package_license')
-                package.release_date = package_data.get('release_date')
-                package.github_stars = package_data.get('github_stars')
-                package.github_forks = package_data.get('github_forks')
-                package.author = package_data.get('github_open_issues')
-
-        else:
-            package = Package(**package_data)  # parent table
-
-        # add maintainers
-        maintainers_list = get_maintainers(data_dict)
-        for maintainer_dict in maintainers_list:
-            if maintainer_dict:
-                create_new_maintainer(maintainer_dict, session, package)
-        # add classifiers
-        create_new_programming_languages(data_dict, package)
-        create_new_natural_languages(data_dict, package)
-        create_new_operating_systems(data_dict, package)
-        create_new_intended_audiences(data_dict, package)
-        create_new_frameworks(data_dict, package)
-        create_new_environments(data_dict, package)
-        create_new_topics(data_dict, package)
-        session.add(package)  # add parent table to session
-        session.commit()  # commit record.
-
-
-# if __name__ == '__main__':
-#     insert_or_update_date()
