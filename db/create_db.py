@@ -1,8 +1,9 @@
+import configparser
+
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from db_config import DB_USER, DB_PASSWORD, DB_SERVER, DB_NAME
 import datetime
 
 # If have not created a database on the server then you can connect directly to the
@@ -71,9 +72,6 @@ class Package(Base):
     description = Column(String(600))
     package_license = Column(String(255))
     release_date = Column(DateTime)
-    # github_stars = Column(Integer)
-    # github_forks = Column(Integer)
-    # github_open_issues = Column(Integer)
     date_created = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
@@ -125,9 +123,6 @@ class GithubInfo(Base):
 
     package_id = Column(Integer, ForeignKey('package.id'))
     package = relationship('Package', back_populates='github_info')
-
-
-
 
 
 class Maintainer(Base):
@@ -228,11 +223,21 @@ class IntendedAudience(Base):
         return f"<IntendedAudience(intended_audience='{self.intended_audience}')>"
 
 
+def get_db_info():
+    config = configparser.ConfigParser()
+    config.read('db_config.ini')
+    name = config['db']['db_name']
+    server = config['db']['server']
+    user = config['db']['user']
+    password = config['db']['password']
+    return name, server, user, password
+
 if __name__ == '__main__':
-    DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}'
+    db_name, db_server, db_user, db_password = get_db_info()
+    DB = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_server}'
     engine = create_engine(DB, echo=True)
-    engine.execute(f"CREATE DATABASE {DB_NAME}")
-    engine.execute(f"USE {DB_NAME}")
+    engine.execute(f"CREATE DATABASE {db_name}")
+    engine.execute(f"USE {db_name}")
     DBSession = sessionmaker()
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)

@@ -1,7 +1,7 @@
 import argparse
-from scrap_package_snippet import PackageSnippet
-from scrap_package import get_data_dict
-from orchestrator import insert_or_update_date, get_github_info
+from scraper.scrap_package_snippet import PackageSnippet
+from scraper.scrap_package import get_data_dict
+from main.orchestrator import insert_or_update_date, get_github_info
 
 from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
 

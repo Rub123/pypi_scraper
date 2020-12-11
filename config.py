@@ -1,6 +1,5 @@
-from db_config import *
 
-DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
+# DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
 SKIP_SECTIONS = 'Navigation', 'Project links'  # sections we decided to skip and not scarp information
 PAGE = 'https://pypi.org/classifiers/'
 CLASSIFIER_INDEX = 1

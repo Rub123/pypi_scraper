@@ -1,5 +1,5 @@
 from db.db_functions import *
-from github_api import parse_github_url, get_contributors_number
+from scraper.github_api import parse_github_url, get_contributors_number
 
 # session = create_db_session()
 

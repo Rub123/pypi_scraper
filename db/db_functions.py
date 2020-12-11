@@ -1,29 +1,16 @@
 from db.create_db import Package, Maintainer, ProgrammingLanguage, NaturalLanguage, OperatingSystem,\
-    IntendedAudience, Framework, Environment, Topic, GithubInfo
+    IntendedAudience, Framework, Environment, Topic, GithubInfo, get_db_info
 import sqlalchemy.orm.session as session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-import configparser
 from db.db_logger import SQL_LOGGER
-from pathlib import Path
-
-db_config_file = Path('db/db_config.ini')
 
 
 def create_db_session():
-    db_url = get_db_url()
+    db_name, db_server, db_user, db_password = get_db_info()
+    db_url = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_server}/{db_name}'
     engine = create_engine(db_url, echo_pool=True, logging_name=SQL_LOGGER.name)
     return sessionmaker(bind=engine)()
-
-
-def get_db_url(config_file=db_config_file):
-    config = configparser.ConfigParser()
-    config.read(config_file)
-    db_name = config['db']['db_name']
-    server = config['db']['server']
-    user = config['db']['user']
-    password = config['db']['password']
-    return f'mysql+mysqlconnector://{user}:{password}@{server}/{db_name}'
 
 
 def name_is_already_in_list(name: str, list_of_dicts: list) -> bool:

@@ -1,6 +1,6 @@
-from scrap_package_snippet import get_soup, get_packages_snippets_from_page, get_next_page, \
+from scraper.scrap_package_snippet import get_packages_snippets_from_page, get_next_page, \
     get_package_details_url
-from scrap_package_page import scrap_side_bars
+from scraper.scrap_package_page import scrap_side_bars
 import logging
 from config import SNIPPET_PAGES, HOME_PAGE, START_PAGE
 from time import sleep
@@ -16,7 +16,7 @@ config.read('config.ini')
 HEADERS = config['requests']['headers']
 TIMEOUT = config['requests']['timeout']
 
-logging.basicConfig(filename='pypi_scraper.log', filemode='a', level=logging.INFO,
+logging.basicConfig(filename='../pypi_scraper.log', filemode='a', level=logging.INFO,
                     format='%(asctime)s-%(levelname)s-FILE:%(filename)s-FUNC:%(funcName)s-LINE:%(lineno)d-%(message)s')
 
 
