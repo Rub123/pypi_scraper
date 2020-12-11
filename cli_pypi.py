@@ -1,11 +1,12 @@
 import argparse
-from insert_data import get_data_dict, insert_or_update_date
 from scrap_package_snippet import PackageSnippet
+from scrap_package import get_data_dict
+from orchestrator import insert_or_update_date, get_github_info
 
 from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
 
 
-def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=None) -> None:
+def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=False) -> None:
     """ Prints the scraped data to the screen. If save_to_db will also save the information to database.
     :param start_link: link to start scraping from
     :param n_pages: int, number of pages
@@ -13,22 +14,23 @@ def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=None) -
     """
 
     for index, data in enumerate(get_data_dict(n_pages=n_pages, start_page=start_link), start=1):
+        data = get_github_info(data)
         if save_to_db:
-            insert_or_update_date(n_pages, start_link)
-        else:
-            for pack_snip, pack_info in data.items():
-                pack_snip: PackageSnippet
-                msg = f"""Package: {str(pack_snip.name)}, Version {str(pack_snip.version)}:
-    
-        Short description: {str(pack_snip.description)}
-    
-        More Info:"""
+            insert_or_update_date(data)
 
-                info_msg = '\n'.join('\t' + key + ':' + str(value) for key, value in pack_info.items())
+        for pack_snip, pack_info in data.items():
+            pack_snip: PackageSnippet
+            msg = f"""Package: {str(pack_snip.name)}, Version {str(pack_snip.version)}:
 
-                print(msg)
-                print(info_msg)
-                print('-' * PACKAGE_SEPARATORS_CHARS)
+    Short description: {str(pack_snip.description)}
+
+    More Info:"""
+
+            info_msg = '\n'.join('\t' + key + ':' + str(value) for key, value in pack_info.items())
+
+            print(msg)
+            print(info_msg)
+            print('-' * PACKAGE_SEPARATORS_CHARS)
 
     print(f'Scraped {index} packages!')  # the last index form the enumerate loop above.
 
