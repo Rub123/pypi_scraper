@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from scraper.scrap_package_snippet import get_packages_snippets_from_page, get_next_page, \
     get_package_details_url
 from scraper.scrap_package_page import scrap_side_bars
@@ -75,17 +74,3 @@ def get_data_dict(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
                 continue
             data = scrap_side_bars(pack_soup, packages_snippet)
             yield data
-
-
-# def get_data_dict_with_git_contributors(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
-#     """A wrapper function around get_data_dict, that adds the data from the github api to the data dict"""
-#     for data in get_data_dict(n_pages, start_page):
-#         snippet_key, data_value_dict = data.items()
-#         if data_value_dict['html_url'] is not None:
-#             repo_owner, repo_name = parse_github_url(data_value_dict['html_url'])
-#             data_value_dict['github_contributors'] = get_contributors_number(repo_owner, repo_name)
-#         yield {snippet_key: data_value_dict}
-#
-#
-# for i in get_data_dict(1):
-#     print(i)

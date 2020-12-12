@@ -8,11 +8,11 @@ from unipath import Path
 config = configparser.ConfigParser(interpolation=None)
 config.read(Path('cli_config.ini').absolute())
 
-data_dict = {}
+START_DICT = {}
 for section in config.sections():
-    data_dict[section] = {}
+    START_DICT[section] = {}
     for option in config.options(section):
-        data_dict[section][option] = config.get(section, option)
+        START_DICT[section][option] = config.get(section, option)
 
 SNIPPET_PAGES = int(data_dict['other']['snippet_pages'])
 PACKAGE_SEPARATORS_CHARS = int(data_dict['other']['package_separators_chars'])
@@ -77,34 +77,19 @@ def main():
     args = parser.parse_args()
 
     if args.topic is not None:
-        print_data(data_dict['topic'][str(args.topic)], args.number, args.save)
+        print_data(START_DICT['topic'][str(args.topic)], args.number, args.save)
 
     elif args.op is not None:
-        print_data(data_dict['op'][str(args.op)], args.number, args.save)
+        print_data(START_DICT['op'][str(args.op)], args.number, args.save)
 
     elif args.framework is not None:
-        print_data(data_dict['framework'][str(args.framework)], args.number, args.save)
+        print_data(START_DICT['framework'][str(args.framework)], args.number, args.save)
 
     elif args.programming is not None:
-        print_data(data_dict['programming'][str(args.programming)], args.number, args.save)
+        print_data(START_DICT['programming'][str(args.programming)], args.number, args.save)
 
     else:
-        print_data(data_dict['programming'][str(args.programming)], args.number, args.save)
-
-    # if args.topic is not None:
-    #     print_data(START_DIC["topic"][str(args.topic)], args.number, args.save)
-    #
-    # elif args.op is not None:
-    #     print_data(START_DIC["op"][str(args.op)], args.number, args.save)
-    #
-    # elif args.framework is not None:
-    #     print_data(START_DIC["framework"][str(args.framework)], args.number, args.save)
-    #
-    # elif args.programming is not None:
-    #     print_data(START_DIC["programming"][str(args.programming)], args.number, args.save)
-    #
-    # else:
-    #     print_data(START_DIC["programming"][str(args.programming)], args.number, args.save)
+        print_data(START_DICT['programming'][str(args.programming)], args.number, args.save)
 
 
 if __name__ == '__main__':

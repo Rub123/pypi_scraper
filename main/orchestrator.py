@@ -5,6 +5,10 @@ from scraper.github_api import parse_github_url, get_contributors_number
 
 
 def create_a_package_temp_dict():
+    """
+    The function creates an empty dict with all mandatory keys
+    :return: dictionary
+    """
     return {'name': None,
             'version': None,
             'author': None,
@@ -15,6 +19,12 @@ def create_a_package_temp_dict():
 
 
 def get_github_info(data_dict: dict) -> dict:
+    """
+    the function receives the dictionary of package information and returns it enriched
+    with github information
+    :param data_dict: dict with package info (that is returned from the scraper).
+    :return: data_dict
+    """
     snippet_key = next(iter(data_dict.keys()))
     dict_value = next(iter(data_dict.values()))
     github_url = dict_value.get('github_url')
@@ -55,6 +65,13 @@ def get_package_data(data_dict: dict) -> dict:
 
 
 def update_package(package_record_from_db, package_dict, session_):
+    """
+    # todo finish
+    :param package_record_from_db:
+    :param package_dict:
+    :param session_:
+    :return: package
+    """
     package = session_.merge(package_record_from_db)
     package.version = package_dict.get('version')
     package.author = package_dict.get('author')
@@ -66,6 +83,13 @@ def update_package(package_record_from_db, package_dict, session_):
 
 
 def add_classifiers(data_dict, package, session_):
+    """
+    # todo finish
+    :param data_dict: dict with package info (that is returned from the scraper).
+    :param package:
+    :param session_:
+    :return: Nothing
+    """
     create_new_programming_languages(data_dict, package, session_)
     create_new_natural_languages(data_dict, package, session_)
     create_new_operating_systems(data_dict, package, session_)
@@ -80,8 +104,8 @@ def insert_or_update_date(data_dict, session_=None) -> None:
     """Given a number of pages to scrap and a starting page.
     inserts or updates the data to the database.
 
-    :param data_dict:
-    :param session_:
+    :param data_dict: dict with package info (that is returned from the scraper).
+    :param session_: Nothing
     """
     session_ = create_db_session() if session_ is None else session_
     package_data = get_package_data(data_dict)

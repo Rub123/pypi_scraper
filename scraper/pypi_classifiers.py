@@ -1,6 +1,5 @@
 import configparser
 from pathlib import Path
-
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup
@@ -41,9 +40,3 @@ def get_all_classifiers(url=PAGE) -> dict:
         classifiers_dict[classifier_type].add(''.join(classifier_type_values))
 
     return classifiers_dict
-
-
-# if __name__ == '__main__':
-#     classifiers = get_all_classifiers()
-#     for key, value in classifiers.items():
-#         print(key, value)

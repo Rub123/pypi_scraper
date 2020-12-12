@@ -4,7 +4,6 @@ from pathlib import Path
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup, element
-
 from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
 

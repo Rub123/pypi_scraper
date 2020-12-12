@@ -106,20 +106,3 @@ def get_package_details_url(package_snippet: PackageSnippet) -> str:
     :return: link to the main page of package
     """
     return HOME_PAGE + package_snippet.link
-
-
-# if __name__ == '__main__':
-#     start_soup = get_soup("https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A+Python+%3A%3A+3")
-#     while True:
-#         try:
-#             pages = int(input('How many pages to scrape? '))
-#             break
-#         except ValueError:
-#             print('Try again!')
-#     pages = pages if pages else 1
-#     packs_snips = get_n_pages_of_packages_snippets(pages, start_soup)
-#     packs_urls = (get_package_details_url(pack) for pack in packs_snips)
-#     for pack_snip, pack_url in zip(packs_snips, packs_urls):
-#         print(pack_snip)
-#         print(pack_url)
-#         print('-' * 100)

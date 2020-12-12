@@ -29,8 +29,8 @@ def name_is_already_in_list(name: str, list_of_dicts: list) -> bool:
 def is_email(string):
     """Given a string of info that could be an internal pypi page or an email.
     return True if the string is an email.
-    :param string:
-    :return:
+    :param string: string
+    :return: True or False
     """
     return '@' in string
 
