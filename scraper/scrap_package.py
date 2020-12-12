@@ -11,7 +11,7 @@ import configparser
 from bs4 import BeautifulSoup
 
 config = configparser.ConfigParser(interpolation=None)
-config.read(Path('../main/config.ini').absolute())
+config.read(Path('config.ini'))
 
 HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
 TIMEOUT = int(config['requests']['timeout'])

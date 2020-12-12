@@ -17,7 +17,7 @@ PackageSnippetList = List[PackageSnippet]
 
 config = configparser.ConfigParser()
 # config.read('main//config.ini')
-config.read(Path('../main/config.ini').absolute())
+config.read(Path('config.ini'))
 
 HOME_PAGE = config['pypi']['HOME_PAGE']
 HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}

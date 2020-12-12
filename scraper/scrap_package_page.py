@@ -8,7 +8,7 @@ from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
 
 config = configparser.ConfigParser()
-config.read(Path('../main/config.ini').absolute())
+config.read(Path('config.ini'))
 
 PAGE = config['classifiers']['PAGE']
 HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
