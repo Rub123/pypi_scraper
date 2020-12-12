@@ -1,8 +1,9 @@
+from pathlib import Path
+
 from scraper.scrap_package_snippet import get_packages_snippets_from_page, get_next_page, \
     get_package_details_url
 from scraper.scrap_package_page import scrap_side_bars
 import logging
-from config import SNIPPET_PAGES, HOME_PAGE, START_PAGE
 from time import sleep
 import requests
 from requests.exceptions import Timeout
@@ -10,11 +11,15 @@ import sys
 import configparser
 from bs4 import BeautifulSoup
 
-config = configparser.ConfigParser()
-config.read('config.ini')
+config = configparser.ConfigParser(interpolation=None)
+config.read(Path('../main/config.ini').absolute())
 
-HEADERS = config['requests']['headers']
-TIMEOUT = config['requests']['timeout']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+HOME_PAGE = config['pypi']['HOME_PAGE']
+SNIPPET_PAGES = config['scraper']['SNIPPET_PAGES']
+START_PAGE = config['pypi']['START_PAGE']
+
 
 logging.basicConfig(filename='../pypi_scraper.log', filemode='a', level=logging.INFO,
                     format='%(asctime)s-%(levelname)s-FILE:%(filename)s-FUNC:%(funcName)s-LINE:%(lineno)d-%(message)s')
@@ -80,6 +85,7 @@ def get_data_dict(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
 #             repo_owner, repo_name = parse_github_url(data_value_dict['html_url'])
 #             data_value_dict['github_contributors'] = get_contributors_number(repo_owner, repo_name)
 #         yield {snippet_key: data_value_dict}
-
+#
+#
 # for i in get_data_dict(1):
 #     print(i)

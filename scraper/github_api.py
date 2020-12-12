@@ -20,7 +20,6 @@ def get_github_query_results(query, token_=token):
     return git_request.json()
 
 
-
 def get_contributors_number(repo_owner, repo_name, token_=token):
     return len(get_github_query_results(get_contributors_query(repo_owner, repo_name), token_))
 

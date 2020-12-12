@@ -1,4 +1,5 @@
 import configparser
+from pathlib import Path
 
 import requests
 from datetime import datetime
@@ -14,13 +15,15 @@ PackageSnippet = namedtuple('PackageSnippet',
 PackageSnippetList = List[PackageSnippet]
 
 
-def get_config_info():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    p_home_page = config['pypi']['HOME_PAGE']
-    p_headers = config['requests']['headers']
-    p_timeout = config['requests']['timeout']
-    return p_home_page, p_headers, p_timeout
+config = configparser.ConfigParser()
+# config.read('main//config.ini')
+config.read(Path('../main/config.ini').absolute())
+
+HOME_PAGE = config['pypi']['HOME_PAGE']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+CLASSIFIER_INDEX = int(config['classifiers']['CLASSIFIER_INDEX'])
+
 
 def get_soup(url: str) -> BeautifulSoup:
     """
@@ -28,8 +31,7 @@ def get_soup(url: str) -> BeautifulSoup:
     :params url: url of page
     :return: BeautifulSoup object
     """
-    _, headers, timeout = get_config_info()
-    response: requests.Response = requests.get(url, headers=headers,  timeout=timeout)
+    response: requests.Response = requests.get(url, headers=HEADERS,  timeout=TIMEOUT)
     return BeautifulSoup(response.content, 'html.parser')
 
 
@@ -87,12 +89,11 @@ def get_n_pages_of_packages_snippets(n_pages: int, start_page: BeautifulSoup) ->
     :params n_pages: int, number of pages to scarp
     :return: list of PackageSnippets
     """
-    home_page, _, _ = get_config_info()
     packages_snippets = []
     page = start_page
     for _ in range(n_pages):
         packages_snippets.extend(get_packages_snippets_from_page(page))
-        page_url = home_page + get_next_page(page)
+        page_url = HOME_PAGE + get_next_page(page)
         page = get_soup(page_url)
 
     return packages_snippets
@@ -104,12 +105,11 @@ def get_package_details_url(package_snippet: PackageSnippet) -> str:
     :params package_snippet: PackageSnippet object
     :return: link to the main page of package
     """
-    home_page, _, _ = get_config_info()
-    return home_page + package_snippet.link
+    return HOME_PAGE + package_snippet.link
 
 
 # if __name__ == '__main__':
-#     start_soup = get_soup(START_PAGE)
+#     start_soup = get_soup("https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A+Python+%3A%3A+3")
 #     while True:
 #         try:
 #             pages = int(input('How many pages to scrape? '))
@@ -122,4 +122,4 @@ def get_package_details_url(package_snippet: PackageSnippet) -> str:
 #     for pack_snip, pack_url in zip(packs_snips, packs_urls):
 #         print(pack_snip)
 #         print(pack_url)
-#         print('-' * NUMBER_OF_SEP_CHARS)
+#         print('-' * 100)

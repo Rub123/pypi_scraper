@@ -1,3 +1,6 @@
+import configparser
+from pathlib import Path
+
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup, element
@@ -5,11 +8,13 @@ from bs4 import BeautifulSoup, element
 from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
 
-from config import SKIP_SECTIONS
-from config import PAGE as CLASSIFIERS_PAGE, HEADERS, TIMEOUT
+config = configparser.ConfigParser()
+config.read(Path('../main/config.ini').absolute())
 
-# titles of information available in sidebar sections
-# ['Navigation', 'Project links', 'Statistics', 'Meta', 'Maintainers', 'Classifiers']
+PAGE = config['classifiers']['PAGE']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+SKIP_SECTIONS = config['scraper']['SKIP_SECTIONS'].split(",")
 
 
 def get_meta(sidebar_section_div: element.Tag) -> dict:
@@ -77,7 +82,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
 # helper functions for getting the classifiers from the package page.
 def get_classifiers_set() -> set:
     """Returns a set of all available classifiers from the CLASSIFIERS_PAGE of pypi in pep8 format"""
-    classifiers_dict = get_all_classifiers(CLASSIFIERS_PAGE)
+    classifiers_dict = get_all_classifiers(PAGE)
     return {classifier.strip().lower().replace(' ', '_') for classifier in classifiers_dict.keys()}
 
 
@@ -110,7 +115,8 @@ def get_classifiers(sidebar_section_div: element.Tag) -> dict:
     return dict(classifiers)
 
 
-# define a dictionary that holds as key the title of the side bar info, and as value the function you need to scarp it
+# define a dictionary that holds as key the title of the side bar info, and as value the function you need
+# to scarp it
 sidebar_section_getters = {
     # 'Navigation': None,
     # 'Project links': None,

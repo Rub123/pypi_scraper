@@ -1,4 +1,5 @@
 import configparser
+from pathlib import Path
 
 from sqlalchemy import Column, DateTime, String, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship, sessionmaker
@@ -10,6 +11,17 @@ import datetime
 # server and execute the following:
 # engine.execute("CREATE DATABASE pypi")
 # engine.execute("USE pypi")
+
+
+def get_db_info():
+    config = configparser.ConfigParser()
+    config.read(Path('db_config.ini').absolute())
+    name = config['db']['db_name']
+    server = config['db']['server']
+    user = config['db']['user']
+    password = config['db']['password']
+    return name, server, user, password
+
 
 Base = declarative_base()
 
@@ -222,15 +234,6 @@ class IntendedAudience(Base):
     def __repr__(self):
         return f"<IntendedAudience(intended_audience='{self.intended_audience}')>"
 
-
-def get_db_info():
-    config = configparser.ConfigParser()
-    config.read('db_config.ini')
-    name = config['db']['db_name']
-    server = config['db']['server']
-    user = config['db']['user']
-    password = config['db']['password']
-    return name, server, user, password
 
 if __name__ == '__main__':
     db_name, db_server, db_user, db_password = get_db_info()
