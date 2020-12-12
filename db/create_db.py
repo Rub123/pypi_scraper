@@ -20,7 +20,7 @@ def get_db_info():
     the function gets the user_name, server, db name and password to sql server from ini file
     """
     config = configparser.ConfigParser()
-    config.read(Path('db_config.ini').absolute())
+    config.read(Path('db_config.ini'))
     name = config['db']['db_name']
     server = config['db']['server']
     user = config['db']['user']
