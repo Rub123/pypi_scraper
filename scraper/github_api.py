@@ -1,8 +1,9 @@
 import os
 import requests
+from private_passwords import GITHUB_TOKEN
 
 
-token = os.getenv('GITHUB_TOKEN', 'token')
+token = os.getenv('GITHUB_TOKEN', GITHUB_TOKEN)
 
 
 def parse_github_url(github_url: str) -> tuple:

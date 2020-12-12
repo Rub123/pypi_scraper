@@ -7,6 +7,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 import datetime
 
+from private_db import PASSWORD
+
 # If have not created a database on the server then you can connect directly to the
 # server and execute the following:
 # engine.execute("CREATE DATABASE pypi")
@@ -15,14 +17,15 @@ import datetime
 
 def get_db_info():
     """
-    the function gets the user_name, server, db name and password to sql server fron ini file
+    the function gets the user_name, server, db name and password to sql server from ini file
     """
     config = configparser.ConfigParser()
     config.read(Path('db_config.ini').absolute())
     name = config['db']['db_name']
     server = config['db']['server']
     user = config['db']['user']
-    password = config['db']['password']
+    # password = config['db']['password']
+    password = PASSWORD
     return name, server, user, password
 
 

@@ -3,13 +3,16 @@ from db.create_db import Package, Maintainer, ProgrammingLanguage, NaturalLangua
 import sqlalchemy.orm.session as session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from db.db_logger import SQL_LOGGER
+import logging
+
+logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
 
 
-def create_db_session():
+def create_db_session() -> session:
+    """Creating a Database sqlalchemy session"""
     db_name, db_server, db_user, db_password = get_db_info()
     db_url = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_server}/{db_name}'
-    engine = create_engine(db_url, echo_pool=True, logging_name=SQL_LOGGER.name)
+    engine = create_engine(db_url, echo_pool=True, logging_name='sqlalchemy.engine')
     return sessionmaker(bind=engine)()
 
 
@@ -215,9 +218,8 @@ def create_new_natural_languages(data_dict: dict, package: Package, session_: se
     already in the database in the natural_language table then the code adds the natural languages to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.
-    :return:
     """
     data = data_dict.values()
     for a_dict in data:
@@ -233,13 +235,12 @@ def create_new_natural_languages(data_dict: dict, package: Package, session_: se
 
 
 def create_new_github_info(data_dict: dict, package: Package, session_: session) -> None:
-    """Adds natural languages to the package package_natural_language. if the natural language is not
-    already in the database in the natural_language table then the code adds the natural languages to the table.
+    """Adds github_info to the package package github_info. if the github_info is not
+    already in the database in the github_info table then the code adds the github_info to the table.
     Dose NOT COMMIT to the database but only adds to the session.
     :param data_dict: Dict with package info (that is returned from the scraper).
-    :param package:
+    :param package: A package object (sqlalchemy table)
     :param session_: sqlalchemy.orm.session.
-    :return:
     """
     data = data_dict.values()
     for a_dict in data:

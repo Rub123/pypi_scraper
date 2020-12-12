@@ -1,6 +1,5 @@
 import configparser
 from pathlib import Path
-
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup, element
@@ -8,7 +7,7 @@ from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
 
 config = configparser.ConfigParser()
-config.read(Path('../main/config.ini').absolute())
+config.read(Path('config.ini').absolute())
 
 PAGE = config['classifiers']['PAGE']
 HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
@@ -56,7 +55,7 @@ def get_maintainers(sidebar_section_div: element.Tag) -> dict:
 
 
 def get_statistics(sidebar_section_div: element.Tag) -> dict:
-    """Getting statistics (stars, forks, open_issues)  from github (if available).
+    """Getting statistics (stars, forks, open_issues, github_url)  from github (if available).
 
     :param sidebar_section_div: div bs4.element.Tag with the relevant statistics data.
     :return: A dict with github statistics metrics (stars, forks, open issues).

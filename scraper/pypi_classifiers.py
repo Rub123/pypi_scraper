@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 
 config = configparser.ConfigParser()
-config.read(Path('../main/config.ini').absolute())
+config.read(Path('config.ini').absolute())
 PAGE = config['classifiers']['PAGE']
 HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
 TIMEOUT = int(config['requests']['timeout'])
