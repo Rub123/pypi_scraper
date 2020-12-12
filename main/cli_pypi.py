@@ -14,8 +14,8 @@ for section in config.sections():
     for option in config.options(section):
         START_DICT[section][option] = config.get(section, option)
 
-SNIPPET_PAGES = int(data_dict['other']['snippet_pages'])
-PACKAGE_SEPARATORS_CHARS = int(data_dict['other']['package_separators_chars'])
+SNIPPET_PAGES = int(START_DICT['other']['snippet_pages'])
+PACKAGE_SEPARATORS_CHARS = int(START_DICT['other']['package_separators_chars'])
 
 
 def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=False) -> None:
