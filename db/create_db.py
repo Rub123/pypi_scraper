@@ -9,11 +9,6 @@ import datetime
 
 from private_db import PASSWORD
 
-# If have not created a database on the server then you can connect directly to the
-# server and execute the following:
-# engine.execute("CREATE DATABASE pypi")
-# engine.execute("USE pypi")
-
 
 def get_db_info():
     """
