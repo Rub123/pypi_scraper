@@ -4,7 +4,7 @@ from scraper.github_api import parse_github_url, get_contributors_number
 # session = create_db_session()
 
 
-def create_a_package_temp_dict():
+def create_a_package_temp_dict() -> dict:
     """
     The function creates an empty dict with all mandatory keys
     :return: dictionary
@@ -64,13 +64,14 @@ def get_package_data(data_dict: dict) -> dict:
     return temp_dict
 
 
-def update_package(package_record_from_db, package_dict, session_):
+def update_package(package_record_from_db: Package, package_dict: dict, session_: session):
     """
-    # todo finish
-    :param package_record_from_db:
-    :param package_dict:
-    :param session_:
-    :return: package
+    # Given a Package that is in the database - merge it to the db session and update the package table.
+    (Dose not commit).
+    :param package_record_from_db: A Package record form the data base
+    :param package_dict: A dict with package data
+    :param session_: session of sqlalchemy
+    :return: An updated Package.
     """
     package = session_.merge(package_record_from_db)
     package.version = package_dict.get('version')
@@ -82,13 +83,12 @@ def update_package(package_record_from_db, package_dict, session_):
     return package
 
 
-def add_classifiers(data_dict, package, session_):
+def add_classifiers(data_dict: dict, package: Package, session_: session) -> None:
     """
-    # todo finish
+    # Adds or updates the package child tables. creating new records for related tables if necessary.
     :param data_dict: dict with package info (that is returned from the scraper).
-    :param package:
-    :param session_:
-    :return: Nothing
+    :param package: A Package record
+    :param session_: session of sqlalchemy
     """
     create_new_programming_languages(data_dict, package, session_)
     create_new_natural_languages(data_dict, package, session_)
