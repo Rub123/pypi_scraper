@@ -42,3 +42,11 @@
 2020-12-12 22:28:36,691-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/pottery/
 2020-12-12 22:28:38,316-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/powa-collector/
 2020-12-12 22:28:38,316-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/powa-collector/
+2020-12-12 23:26:53,496-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/search/?q=&o=-created&c=Topic+%3A%3A+Communications
+2020-12-12 23:26:53,496-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/search/?q=&o=-created&c=Topic+%3A%3A+Communications
+2020-12-12 23:26:54,827-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/search/?c=Topic+%3A%3A+Communications&o=-created&q=&page=2
+2020-12-12 23:26:54,827-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/search/?c=Topic+%3A%3A+Communications&o=-created&q=&page=2
+2020-12-12 23:26:55,821-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/mautrix-instagram/
+2020-12-12 23:26:55,821-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/mautrix-instagram/
+2020-12-12 23:27:01,067-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/tlds/
+2020-12-12 23:27:01,067-INFO-FILE:scrap_package.py-FUNC:timeout_handler-LINE:47-successfully requested and souped https://pypi.org/project/tlds/
