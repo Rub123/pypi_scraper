@@ -1,3 +1,4 @@
+import mysql.connector
 import configparser
 from pathlib import Path
 
@@ -237,11 +238,18 @@ class IntendedAudience(Base):
 
 
 if __name__ == '__main__':
+    print('start')
     db_name, db_server, db_user, db_password = get_db_info()
+    print('a')
     DB = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_server}'
+    print('b')
     engine = create_engine(DB, echo=True)
+    print('c')
     engine.execute(f"CREATE DATABASE {db_name}")
+    print('d')
     engine.execute(f"USE {db_name}")
+    print('e')
     DBSession = sessionmaker()
+    print('f')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)

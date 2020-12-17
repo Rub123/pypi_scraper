@@ -13,7 +13,7 @@ def create_db_session() -> session:
     db_name, db_server, db_user, db_password = get_db_info()
     db_url = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_server}/{db_name}'
     engine = create_engine(db_url, echo_pool=True, logging_name='sqlalchemy.engine')
-    return sessionmaker(bind=engine)()
+    return sessionmaker(bind=engine, autoflush=False)()
 
 
 def name_is_already_in_list(name: str, list_of_dicts: list) -> bool:
