@@ -58,7 +58,7 @@ def get_package_data(data_dict: dict) -> dict:
         author = a_dict.get('author')
         if author is not None:
             author = a_dict.get('author')[0]  # list of 1 tuple
-            temp_dict['author'] = author[0]  # name
+            temp_dict['author'] = author[0][:255]  # name
             temp_dict['author_info'] = author[1]  # info
 
     return temp_dict
