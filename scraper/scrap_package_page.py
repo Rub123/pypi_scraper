@@ -7,6 +7,10 @@ from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
 import json
 
+
+with open('github') as f:  # token for github api
+    token = f.read().strip()
+
 config = configparser.ConfigParser()
 config.read(Path('config.ini').absolute())
 
@@ -67,7 +71,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
             data_url = github_div.get('data-url')
             # json_data = get_github_query_results(data_url)
             try:
-                json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
+                json_data = requests.get(data_url, headers={'Authorization': f'token {token}'},  timeout=TIMEOUT).json()
                 if 'message' in json_data.keys() and len(json_data.keys()) == 2:
                     # no data
                     continue
