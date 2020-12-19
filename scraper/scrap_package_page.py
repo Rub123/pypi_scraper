@@ -1,11 +1,10 @@
 import configparser
 from pathlib import Path
-import requests
 from collections import defaultdict
+import requests
 from bs4 import BeautifulSoup, element
 from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
-from scraper.github_api import get_github_query_results
 
 config = configparser.ConfigParser()
 config.read(Path('config.ini').absolute())
@@ -65,8 +64,8 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
     for github_div in sidebar_section_div.find_all('div', class_='github-repo-info'):
         if github_div:
             data_url = github_div.get('data-url')
-            json_data = get_github_query_results(data_url)
-            # json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
+            # json_data = get_github_query_results(data_url)
+            json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
             if 'message' in json_data.keys() and len(json_data.keys()) == 2:
                 # no data
                 continue
