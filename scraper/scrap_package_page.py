@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup, element
 from scraper.scrap_package_snippet import PackageSnippet
 from scraper.pypi_classifiers import get_all_classifiers
+import json
 
 config = configparser.ConfigParser()
 config.read(Path('config.ini').absolute())
@@ -65,16 +66,19 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
         if github_div:
             data_url = github_div.get('data-url')
             # json_data = get_github_query_results(data_url)
-            json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
-            if 'message' in json_data.keys() and len(json_data.keys()) == 2:
-                # no data
+            try:
+                json_data = requests.get(data_url, headers=HEADERS,  timeout=TIMEOUT).json()
+                if 'message' in json_data.keys() and len(json_data.keys()) == 2:
+                    # no data
+                    continue
+                else:
+                    statistics['github_stars'] = json_data.get('stargazers_count')
+                    statistics['github_forks'] = json_data.get('forks')
+                    statistics['github_open_issues'] = json_data.get('open_issues_count')
+                    statistics['github_url'] = json_data.get('html_url')
+                    break
+            except json.JSONDecodeError:
                 continue
-            else:
-                statistics['github_stars'] = json_data.get('stargazers_count')
-                statistics['github_forks'] = json_data.get('forks')
-                statistics['github_open_issues'] = json_data.get('open_issues_count')
-                statistics['github_url'] = json_data.get('html_url')
-                break
     return statistics
 
 
