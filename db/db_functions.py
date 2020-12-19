@@ -249,11 +249,11 @@ def create_new_github_info(data_dict: dict, package: Package, session_: session)
 
             github_url_in_db = session_.query(GithubInfo).filter(
                 GithubInfo.github_url == github_url).first()
-            if github_url_in_db:
-                package.github_info = github_url_in_db
-            else:
-                package.github_info = GithubInfo(github_url=github_url,
-                                                 github_stars=a_dict.get('github_stars'),
-                                                 github_forks=a_dict.get('github_forks'),
-                                                 github_open_issues=a_dict.get('github_open_issues'),
-                                                 github_contributors=a_dict.get('github_contributors'))
+            # if github_url_in_db:
+            #     package.github_info = github_url_in_db
+            # else:
+            package.github_info = GithubInfo(github_url=github_url,
+                                             github_stars=a_dict.get('github_stars'),
+                                             github_forks=a_dict.get('github_forks'),
+                                             github_open_issues=a_dict.get('github_open_issues'),
+                                             github_contributors=a_dict.get('github_contributors'))
