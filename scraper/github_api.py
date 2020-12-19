@@ -1,6 +1,7 @@
 import os
 import requests
 from private_passwords import GITHUB_TOKEN
+import json
 
 
 token = os.getenv('GITHUB_TOKEN', GITHUB_TOKEN)
@@ -46,4 +47,9 @@ def get_contributors_number(repo_owner, repo_name, token_=token):
     :param token_: str
     :return: number of contributors
     """
-    return len(get_github_query_results(get_contributors_query(repo_owner, repo_name), token_))
+    try:
+        return len(get_github_query_results(get_contributors_query(repo_owner, repo_name), token_))
+    except json.JSONDecodeError:
+        return None
+
+
