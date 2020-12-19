@@ -115,6 +115,7 @@ def insert_or_update_date(data_dict, session_=None) -> None:
     package_in_db = session_.query(Package).filter(Package.name == package_name).first()
     if package_in_db:
         if package_data.get('version') == package_in_db.version:
+            create_new_github_info(data_dict, package_in_db, session_)
             return None  # already in updated in the database.
         else:
             package = update_package(package_in_db, package_data, session_)
