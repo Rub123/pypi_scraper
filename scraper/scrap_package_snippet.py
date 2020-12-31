@@ -1,10 +1,11 @@
+import configparser
+from pathlib import Path
+
 import requests
 from datetime import datetime
 from collections import namedtuple
 from bs4 import BeautifulSoup, element
 from typing import List
-
-from config import HOME_PAGE, HEADERS, TIMEOUT
 
 # A named tuple class to hold the package snippet info.
 PackageSnippet = namedtuple('PackageSnippet',
@@ -12,6 +13,16 @@ PackageSnippet = namedtuple('PackageSnippet',
 
 # Aliasing type hints for a list of Package snippets.
 PackageSnippetList = List[PackageSnippet]
+
+
+config = configparser.ConfigParser()
+# config.read('main//config.ini')
+config.read(Path('../main/config.ini').absolute())
+
+HOME_PAGE = config['pypi']['HOME_PAGE']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+CLASSIFIER_INDEX = int(config['classifiers']['CLASSIFIER_INDEX'])
 
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -95,20 +106,3 @@ def get_package_details_url(package_snippet: PackageSnippet) -> str:
     :return: link to the main page of package
     """
     return HOME_PAGE + package_snippet.link
-
-
-# if __name__ == '__main__':
-#     start_soup = get_soup(START_PAGE)
-#     while True:
-#         try:
-#             pages = int(input('How many pages to scrape? '))
-#             break
-#         except ValueError:
-#             print('Try again!')
-#     pages = pages if pages else 1
-#     packs_snips = get_n_pages_of_packages_snippets(pages, start_soup)
-#     packs_urls = (get_package_details_url(pack) for pack in packs_snips)
-#     for pack_snip, pack_url in zip(packs_snips, packs_urls):
-#         print(pack_snip)
-#         print(pack_url)
-#         print('-' * NUMBER_OF_SEP_CHARS)

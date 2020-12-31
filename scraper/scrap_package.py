@@ -1,8 +1,8 @@
-from scrap_package_snippet import get_soup, get_packages_snippets_from_page, get_next_page, \
+from pathlib import Path
+from scraper.scrap_package_snippet import get_packages_snippets_from_page, get_next_page, \
     get_package_details_url
-from scrap_package_page import scrap_side_bars
+from scraper.scrap_package_page import scrap_side_bars
 import logging
-from config import SNIPPET_PAGES, HOME_PAGE, START_PAGE
 from time import sleep
 import requests
 from requests.exceptions import Timeout
@@ -10,13 +10,17 @@ import sys
 import configparser
 from bs4 import BeautifulSoup
 
-config = configparser.ConfigParser()
-config.read('config.ini')
+config = configparser.ConfigParser(interpolation=None)
+config.read(Path('../main/config.ini').absolute())
 
-HEADERS = config['requests']['headers']
-TIMEOUT = config['requests']['timeout']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+HOME_PAGE = config['pypi']['HOME_PAGE']
+SNIPPET_PAGES = config['scraper']['SNIPPET_PAGES']
+START_PAGE = config['pypi']['START_PAGE']
 
-logging.basicConfig(filename='pypi_scraper.log', filemode='a', level=logging.INFO,
+
+logging.basicConfig(filename='../pypi_scraper.log', filemode='a', level=logging.INFO,
                     format='%(asctime)s-%(levelname)s-FILE:%(filename)s-FUNC:%(funcName)s-LINE:%(lineno)d-%(message)s')
 
 
@@ -70,16 +74,3 @@ def get_data_dict(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
                 continue
             data = scrap_side_bars(pack_soup, packages_snippet)
             yield data
-
-
-# def get_data_dict_with_git_contributors(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
-#     """A wrapper function around get_data_dict, that adds the data from the github api to the data dict"""
-#     for data in get_data_dict(n_pages, start_page):
-#         snippet_key, data_value_dict = data.items()
-#         if data_value_dict['html_url'] is not None:
-#             repo_owner, repo_name = parse_github_url(data_value_dict['html_url'])
-#             data_value_dict['github_contributors'] = get_contributors_number(repo_owner, repo_name)
-#         yield {snippet_key: data_value_dict}
-
-# for i in get_data_dict(1):
-#     print(i)

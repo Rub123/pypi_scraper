@@ -1,8 +1,16 @@
+import configparser
+from pathlib import Path
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup
 
-from config import PAGE, CLASSIFIER_INDEX, HEADERS, TIMEOUT
+
+config = configparser.ConfigParser()
+config.read(Path('../main/config.ini').absolute())
+PAGE = config['classifiers']['PAGE']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+CLASSIFIER_INDEX = int(config['classifiers']['CLASSIFIER_INDEX'])
 
 
 def get_soup(url: str) -> BeautifulSoup:
@@ -32,9 +40,3 @@ def get_all_classifiers(url=PAGE) -> dict:
         classifiers_dict[classifier_type].add(''.join(classifier_type_values))
 
     return classifiers_dict
-
-
-# if __name__ == '__main__':
-#     classifiers = get_all_classifiers()
-#     for key, value in classifiers.items():
-#         print(key, value)

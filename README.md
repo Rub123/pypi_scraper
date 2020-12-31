@@ -5,13 +5,14 @@ pypi_scraper can be used to scrape information of python packages from https://p
 ## Description
 
 This script can be used to scrape information from pypi website.
-The information types available on this website are very vast and every package has different combinations of information
-types that are available. 
+The information types available on this website are very vast and every package has different combinations 
+of information types that are available. 
 An example result for one package:
 
     Package: sphinxcontrib-towncrier, Version 0.1.0a1:
 
-        Short description: An RST directive for injecting a Towncrier-generated changelog draft containing fragments for the unreleased (next) project version
+        Short description: An RST directive for injecting a Towncrier-generated changelog draft containing fragments 
+        for the unreleased (next) project version
         
         More Info:
         stars:8
@@ -25,7 +26,8 @@ An example result for one package:
         license:['OSI Approved :: BSD License']
         operating_system:['OS Independent']
         programming_language:['Python :: 3.6', 'Python :: 3.7', 'Python :: 3.8', 'Python :: 3.9']
-        topic:['Documentation :: Sphinx', 'Software Development :: Documentation', 'System :: Software Distribution', 'Utilities']
+        topic:['Documentation :: Sphinx', 'Software Development :: Documentation', 'System :: Software Distribution',
+        'Utilities']
 
 ## Installations
 
@@ -42,20 +44,6 @@ This script defines the functions that are used to scarp information from the se
 Each page holds info of 20 packages that includes - Name, version, link to detailed page of the package,
 release date, short description of the package
 
-HOME_PAGE -
-Do not change this as this script is not compatible with other websites
-
-START_PAGE -
-In this version we take 
-https://pypi.org/search/?q=&o=-created&c=Programming+Language+%3A%3A+Python+%3A%3A+3
-
-This page orders the results by last updated and takes only results that are compatible with python 3.
-You can take any other order / filters you want to get your desired result.
-
-NUMBER_OF_SEP_CHARS -
-When printing the information directly from this script (not from print_data), each package information is 
-separated by a line of "-" this constant defines the number of dash lines used to separate each package information.
-
 ### scarp_package_page
 
 this script defines the functions that are used in order to scarp information from the detailed pages of each package.
@@ -65,35 +53,102 @@ such as:
 'Navigation', 'Project links' are ignored in this version as well as the full description that can be found in the
 main area of the page.
 
-
-SKIP_SECTIONS -
-The script scarp information from the side bar of each package page.
-The script ignores the sections defined in this constant. Do not remove  'Navigation' or 'Project links'
-as the script is not compatible with scarping this information. If you wish to ignore other sections from the side bar
-such as 'Statistics', 'Meta', 'Maintainers', 'Classifiers' add them to this constant
-
-
 ### pypi_classifiers
 
-This script is used to scrap all the different types of information that can be found in the Classifiers section
+This script is used to scrape all the different types of information that can be found in the Classifiers section
 of the side bar of a package page.
-Do not change any of the constants in this page.
 
-PAGE
-link to the classifiers page of pypi 
+### cli_pypi.py
+This is the main script for the user. It is a command line tool that helps the user decide what data he wants to scrape
+and whether to print it or create a local db.
 
-CLASSIFIER_INDEX
-index to where information of the classifiers can be found after splitting the data string
+command line arguments 
+-t --topic
+scrape data by topic. Can choose one topic at a time from: 
+1-Communications 
+2-Database
+3-Games/Entertainment
+4-Internet
+5-Scientific/Engineering
 
-### print_data.py
-This is the main script for the user. It is used to print the data and also optional to save it to a text file.
-In order to save to a text file please define a path for the text file to be saved.
-in future versions we will fix this to be more user friendly :)
+-o --op
+scrape data by operating system Can choose one OP at a time from:
+1- MacOS
+2- Windows
+3- unix
 
-SNIPPET_PAGES - amount of pages to scrape from the search page. Each page has 20 packages. Change this constant
-to get more / less results
-PACKAGE_SEPARATORS_CHARS - When printing the information dor saving to a text file, each package information is 
-separated by a line of "-" this constant defines the number of dash lines used to separate each package information.
+-f --framework
+scrape data by framework system Can choose one framework at a time from:
+1-django
+2-plone
+
+-p --programming
+scrape data by programming language/ Can choose one programming language at a time from:
+1-python (default)
+2-SQL
+3-C++
+
+-n --number
+how many pages to scrape from, Defualt is 5 and can be change from config file.
+
+-s --save
+Default False, if chosen will create a local DB with the scraped data.
+
+###config.py
+
+All the constants used in this script
+
+DB = f'mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/{DB_NAME}'
+url to the sqlalchemy framework to connect to DB (info taken from db_config.py)
+
+SKIP_SECTIONS = 'Navigation', 'Project links'  
+sections from side bar we decided to skip and not take information from. Do not change without changing the code as it
+will fail.
+
+PAGE = 'https://pypi.org/classifiers/'
+link to pypi page where all the classifier information is help
+
+CLASSIFIER_INDEX = 1
+Index to get a specific part of a split result of classifiers data 
+
+HOME_PAGE = "https://pypi.org"
+link to pypi homepage
+
+NUMBER_OF_SEP_CHARS = 100  
+When printing the info for a package in cli_pypi - will use n times separator char between 
+each pack.
+
+SNIPPET_PAGES = 5  
+Default number of pages to scrape from. there are 20 packages per page so 5 pages is for 
+scraping a 100 packages.
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) 
+Chrome/70.0.3538.77 Safari/537.36"}
+parameter sent to requests in order to scrape data from git with less problems.
+Making a request with a user agent fakes a browser visit to a particular webpage.
+
+TIMEOUT = 10
+parameter sent to requests in order to scrape data from git with less problems
+
+START_DIC
+dic that is used to define the link to start scraping from depends on the user choice in the cli tool.
+If you wish to change the url's make sure they are urls to a search page of pypi and not any other
+page of the website.
+
+###db_config.py
+the users personal info to create SQL db. 
+Should be changed to allow the script to create the DB.
+
+DB_USER = 'root'
+DB_PASSWORD = 'password'
+DB_SERVER = 'localhost'
+DB_NAME = 'pypi'
+
+## insert_data.py
+This file insert data to the db if the save option was chosen from the cli_pypi file.
+
+### db_config.py
+A separate script you should run it to set up all the tables and relations of the SQL db.
 
 
 ## Authors and acknowledgment

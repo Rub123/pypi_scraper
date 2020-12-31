@@ -1,9 +1,21 @@
 import argparse
-from scrap_package_snippet import PackageSnippet
-from scrap_package import get_data_dict
-from orchestrator import insert_or_update_date, get_github_info
+import configparser
+from scraper.scrap_package_snippet import PackageSnippet
+from scraper.scrap_package import get_data_dict
+from main.orchestrator import insert_or_update_date, get_github_info
+from unipath import Path
 
-from config import PACKAGE_SEPARATORS_CHARS, START_DIC, SNIPPET_PAGES
+config = configparser.ConfigParser(interpolation=None)
+config.read(Path('cli_config.ini').absolute())
+
+START_DICT = {}
+for section in config.sections():
+    START_DICT[section] = {}
+    for option in config.options(section):
+        START_DICT[section][option] = config.get(section, option)
+
+SNIPPET_PAGES = int(data_dict['other']['snippet_pages'])
+PACKAGE_SEPARATORS_CHARS = int(data_dict['other']['package_separators_chars'])
 
 
 def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=False) -> None:
@@ -37,8 +49,8 @@ def print_data(start_link: str, n_pages: int = SNIPPET_PAGES, save_to_db=False) 
 
 def main():
     """
-    user chooses what to scape from a list of options.
-    Default - programming language python
+    user chooses what to scrape from a list of options.
+    Default - programming language python, 5 pages and print to screen (not saving to local db)
     """
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
@@ -65,19 +77,19 @@ def main():
     args = parser.parse_args()
 
     if args.topic is not None:
-        print_data(START_DIC["topic"][str(args.topic)], args.number, args.save)
+        print_data(START_DICT['topic'][str(args.topic)], args.number, args.save)
 
     elif args.op is not None:
-        print_data(START_DIC["op"][str(args.op)], args.number, args.save)
+        print_data(START_DICT['op'][str(args.op)], args.number, args.save)
 
     elif args.framework is not None:
-        print_data(START_DIC["framework"][str(args.framework)], args.number, args.save)
+        print_data(START_DICT['framework'][str(args.framework)], args.number, args.save)
 
     elif args.programming is not None:
-        print_data(START_DIC["programming"][str(args.programming)], args.number, args.save)
+        print_data(START_DICT['programming'][str(args.programming)], args.number, args.save)
 
     else:
-        print_data(START_DIC["programming"][str(args.programming)], args.number, args.save)
+        print_data(START_DICT['programming'][str(args.programming)], args.number, args.save)
 
 
 if __name__ == '__main__':

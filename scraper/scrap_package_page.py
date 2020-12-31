@@ -1,20 +1,19 @@
-from scrap_package_snippet import get_soup, get_packages_snippets_from_page, get_next_page, \
-    get_package_details_url
-
-from config import SNIPPET_PAGES, HOME_PAGE, START_PAGE
+import configparser
+from pathlib import Path
 
 import requests
 from collections import defaultdict
 from bs4 import BeautifulSoup, element
+from scraper.scrap_package_snippet import PackageSnippet
+from scraper.pypi_classifiers import get_all_classifiers
 
-from scrap_package_snippet import PackageSnippet
-from pypi_classifiers import get_all_classifiers
+config = configparser.ConfigParser()
+config.read(Path('../main/config.ini').absolute())
 
-from config import SKIP_SECTIONS
-from config import PAGE as CLASSIFIERS_PAGE, HEADERS, TIMEOUT
-
-# titles of information available in sidebar sections
-# ['Navigation', 'Project links', 'Statistics', 'Meta', 'Maintainers', 'Classifiers']
+PAGE = config['classifiers']['PAGE']
+HEADERS = {config['requests']['headers_key']: config['requests']['headers_val']}
+TIMEOUT = int(config['requests']['timeout'])
+SKIP_SECTIONS = config['scraper']['SKIP_SECTIONS'].split(",")
 
 
 def get_meta(sidebar_section_div: element.Tag) -> dict:
@@ -62,7 +61,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
     :param sidebar_section_div: div bs4.element.Tag with the relevant statistics data.
     :return: A dict with github statistics metrics (stars, forks, open issues).
     """
-    statistics = {'stars': None, 'forks': None, 'open_issues': None, 'html_url': None}
+    statistics = {'github_stars': None, 'github_forks': None, 'github_open_issues': None,  'github_url': None}
     for github_div in sidebar_section_div.find_all('div', class_='github-repo-info'):
         if github_div:
             data_url = github_div.get('data-url')
@@ -71,10 +70,10 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
                 # no data
                 continue
             else:
-                statistics['stars'] = json_data.get('stargazers_count')
-                statistics['forks'] = json_data.get('forks')
-                statistics['open_issues'] = json_data.get('open_issues_count')
-                statistics['html_url'] = json_data.get('html_url')
+                statistics['github_stars'] = json_data.get('stargazers_count')
+                statistics['github_forks'] = json_data.get('forks')
+                statistics['github_open_issues'] = json_data.get('open_issues_count')
+                statistics['github_url'] = json_data.get('html_url')
                 break
     return statistics
 
@@ -82,7 +81,7 @@ def get_statistics(sidebar_section_div: element.Tag) -> dict:
 # helper functions for getting the classifiers from the package page.
 def get_classifiers_set() -> set:
     """Returns a set of all available classifiers from the CLASSIFIERS_PAGE of pypi in pep8 format"""
-    classifiers_dict = get_all_classifiers(CLASSIFIERS_PAGE)
+    classifiers_dict = get_all_classifiers(PAGE)
     return {classifier.strip().lower().replace(' ', '_') for classifier in classifiers_dict.keys()}
 
 
@@ -115,7 +114,8 @@ def get_classifiers(sidebar_section_div: element.Tag) -> dict:
     return dict(classifiers)
 
 
-# define a dictionary that holds as key the title of the side bar info, and as value the function you need to scarp it
+# define a dictionary that holds as key the title of the side bar info, and as value the function you need
+# to scarp it
 sidebar_section_getters = {
     # 'Navigation': None,
     # 'Project links': None,
@@ -146,37 +146,3 @@ def scrap_side_bars(pack_soup: BeautifulSoup, pack_snippet: PackageSnippet):
         data[pack_snippet].update(sidebar_section_getters[sidebar_title](div))
 
     return data
-
-
-# def get_data_dict(n_pages: int = SNIPPET_PAGES, start_page: str = START_PAGE):
-#     """ Yields the scraped data as a dict, one by one.
-#
-#     :param start_page: The page to start scraping from.
-#     :param n_pages: int, number of pages (each page has 20 packages).
-#     """
-#     page_url = start_page
-#     page = get_soup(page_url)
-#     for _ in range(n_pages):
-#         packages_snippets = get_packages_snippets_from_page(page)
-#         page_url = HOME_PAGE + get_next_page(page)
-#         page = get_soup(page_url)  # update to the next page
-#         for packages_snippet in packages_snippets:
-#
-#             pack_soup = get_soup(get_package_details_url(packages_snippet))
-#             data = scrap_side_bars(pack_soup, packages_snippet)
-#             yield data
-from scrap_package import get_data_dict
-
-
-def parse_github_url(github_url: str) -> tuple:
-    repo_owner, repo_name = github_url.split('/')[-2:]
-    return repo_owner, repo_name
-
-
-for i in get_data_dict(1):
-    # print(i)
-    for key, value in i.items():
-        # print(value)
-        github_url = value['html_url']
-        if github_url:
-            print(parse_github_url(github_url))
